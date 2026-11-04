@@ -1,7 +1,7 @@
-import { VehicleId } from "./value-objects/id-create.value-objects.js";
+import { VehicleId } from "./value-objects/vehicle-id.value-objects.js";
 import { UserId } from "../../users/domain/value-objects/id-create.value-objects.js";
 import { vehicleType } from "./enums/vehicle-types.enum.js";
-import { rentalPurpose } from "./enums/rental-purposE.enum.js";
+import { rentalPurpose } from "./enums/rental-purpose.enum.js";
 
 
 export abstract class Vehicle {
@@ -57,14 +57,6 @@ export abstract class Vehicle {
 
     }
 
-    public validateVehicleTypeUse(typeUse: rentalPurpose): boolean{
-        if(!this.pricingStrategies[typeUse]){
-            throw new Error("Esse veículo não aceita esse uso.")
-        }
-
-        return true
-    };
-
 
     public rent(): void {
         if (!this.isAvailable) {
@@ -86,12 +78,10 @@ export abstract class Vehicle {
 
     public calculateCostByTypeUse(typeUse: rentalPurpose): number{
 
-        this.validateVehicleTypeUse(typeUse);
-
         const getStrategy = this.pricingStrategies[typeUse]
 
         if(!getStrategy){
-            throw new Error("Estratégia de preço não encontrada.");
+            throw new Error("Esse veículo não aceita esse tipo de uso.");
         }
 
         return getStrategy(this.dailyRate)

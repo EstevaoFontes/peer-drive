@@ -1,14 +1,15 @@
 import { randomUUID } from "node:crypto";
 
-export abstract class UniqueEntityId{
-    protected readonly value: string
+export abstract class UniqueEntityId {
+
+    protected readonly _value: string
 
     constructor(id?: string){
-        this.value = id ?? randomUUID();
+        this._value = id ?? randomUUID();
     }
 
-    public getValue(): string{
-        return this.value;
+    public get value(): string{
+        return this._value;
     }
 
     public equals(id?: UniqueEntityId): boolean {
@@ -20,6 +21,7 @@ export abstract class UniqueEntityId{
             return false;
         }
         
-        return this.value === id.getValue();
+        return this._value === id.value;
     }
+
 }   

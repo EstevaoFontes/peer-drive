@@ -1,8 +1,8 @@
 import { Vehicle } from "./vehicle.entity.js";
-import { VehicleId } from "./value-objects/id-create.value-objects.js";
+import { VehicleId } from "./value-objects/vehicle-id.value-objects.js";
 import { UserId } from "../../users/domain/value-objects/id-create.value-objects.js";
 import { vehicleType } from "./enums/vehicle-types.enum.js";
-import { rentalPurpose } from "./enums/rental-purposE.enum.js";
+import { rentalPurpose } from "./enums/rental-purpose.enum.js";
 
 export class Motorcycle extends Vehicle {
 

@@ -18,23 +18,22 @@ export class User {
     }
 
 
-    static create(id: string, email: string, name: string, cpf: string, password: string): User {
+    static create(email: string, name: string, cpf: string, password: string): User {
 
         if (!name || name.trim().length < 3) {
             throw new Error('O nome não pode ter menos de 3 caracteres.');
         }
 
         if (password.length < 6) {
-            throw new Error('A senha n pode ser menor que 6 caracteres.');
+            throw new Error('A senha não pode ser menor que 6 caracteres.');
         }
 
-        const userId = new UserId(id);
         const newEmail = new Email(email);
         const newCpf = new Cpf(cpf);
         const dateNow = new Date();
 
         const newUser = new User(
-            userId,
+            new UserId(),
             newEmail,
             name,
             newCpf,
@@ -44,5 +43,26 @@ export class User {
         );
 
         return newUser;
+    }
+
+    static restore(
+        id: string,
+        email: string,
+        name: string,
+        cpf: string,
+        password: string = '',
+        createdAt: Date = new Date,
+        updatedAt: Date = new Date
+    ): User {
+
+        return new User(
+            new UserId(id),
+            new Email(email),
+            name,
+            new Cpf(cpf),
+            password,
+            createdAt,
+            updatedAt
+        )
     }
 }

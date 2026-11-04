@@ -1,7 +1,7 @@
 import validator from 'validator'
 
 export class Email{
-    private readonly value: string;
+    private readonly _value: string;
 
     constructor(email: string){
 
@@ -15,10 +15,10 @@ export class Email{
             throw new Error('Formato de e-mail invalido.')
         }
 
-        this.value = emailNormalized
+        this._value = emailNormalized
     }
 
-    public get getEmail(): string{
-        return this.value
+    public get value(): string{
+        return this._value
     }
 }

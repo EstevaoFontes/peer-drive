@@ -1,7 +1,7 @@
 import {cpf as cpfValidation} from 'cpf-cnpj-validator'
 
 export class Cpf{
-    private readonly value: string;
+    private readonly _value: string;
 
     constructor(cpf: string){
 
@@ -15,14 +15,14 @@ export class Cpf{
             throw new Error('CPF invalido.');
         }
 
-        this.value = cleanedCpf;
+        this._value = cleanedCpf;
     }
 
-    public get GetCpf(): string{
-        return this.value;
+    public get value(): string{
+        return this._value;
     }
 
-    public get cpfFormatted(): string{
-        return cpfValidation.format(this.value);
+    public cpfFormatted(): string{
+        return cpfValidation.format(this._value);
     }
 }
