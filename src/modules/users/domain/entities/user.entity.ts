@@ -1,20 +1,53 @@
-import { Cpf } from "./value-objects/cpf-validate.value-objects.js";
-import { Email } from "./value-objects/email-validate.value-objects.js";
-import { UserId } from "./value-objects/id-create.value-objects.js";
+import { Cpf } from "../value-objects/cpf-validate.value-objects.js";
+import { Email } from "../value-objects/email-validate.value-objects.js";
+import { UserId } from "../value-objects/id-create.value-objects.js";
 
 export class User {
     constructor(
         public readonly id: UserId,
-        public readonly email: Email,
+        public email: Email,
         public name: string,
         public readonly cpf: Cpf,
         private password: string,
         public readonly createdAt: Date,
-        public readonly updatedAt: Date
-    ) { }
+        public updatedAt: Date
+    ) { };
 
     get passwordValue(): string {
         return this.password;
+    };
+
+    public changeEmail(newEmail: string): void {
+
+        if (!newEmail) {
+            throw new Error('O email deve ser passado.')
+        };
+
+        if (newEmail === this.email.value) {
+            throw new Error('O novo email deve ser diferente do atual.')
+        };
+
+        this.email = new Email(newEmail);
+        this.updatedAt = new Date();
+
+    };
+
+    public changePassword(newPassword: string): void {
+
+        if (!newPassword) {
+            throw new Error('A senha deve ser passada.')
+        };
+
+        if (newPassword === this.passwordValue) {
+            throw new Error('A nova senha não atende aos requisitos de segurança.')
+        };
+
+        if (newPassword.length < 6) {
+            throw new Error('A senha não pode ser menor que 6 caracteres.')
+        };
+
+        this.password = newPassword
+        this.updatedAt = new Date();
     }
 
 
@@ -43,16 +76,16 @@ export class User {
         );
 
         return newUser;
-    }
+    };
 
     static restore(
         id: string,
         email: string,
         name: string,
         cpf: string,
-        password: string = '',
-        createdAt: Date = new Date,
-        updatedAt: Date = new Date
+        password: string,
+        createdAt: Date,
+        updatedAt: Date
     ): User {
 
         return new User(
@@ -64,5 +97,5 @@ export class User {
             createdAt,
             updatedAt
         )
-    }
-}
+    };
+};

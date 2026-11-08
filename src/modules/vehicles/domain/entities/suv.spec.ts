@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { Suv } from "./suv.entity.js";
-import { UserId } from "../../users/domain/value-objects/id-create.value-objects.js";
-import { VehicleId } from "./value-objects/vehicle-id.value-objects.js";
-import { rentalPurpose } from "./enums/rental-purpose.enum.js";
+import { UserId } from "../../../users/domain/value-objects/id-create.value-objects.js";
+import { VehicleId } from "../value-objects/vehicle-id.value-objects.js";
+import { rentalPurpose } from "../enums/rental-purpose.enum.js";
 
 describe('SUV entity', () => {
 
