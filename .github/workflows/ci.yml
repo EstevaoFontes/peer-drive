@@ -1,0 +1,40 @@
+name: CI Pipeline
+
+# Define quando a pipeline vai ser executada
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x] # Podes ajustar para a versão do Node que estás a usar localmente
+
+    steps:
+      # 1. Faz o checkout do código do repositório
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configura o ambiente Node.js
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      # 3. Instala as dependências de forma limpa
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Executa a compilação (TypeScript build) para garantir que não há erros de tipagem
+      - name: Build project
+        run: npm run build
+
+      # 5. Executa os testes unitários (Vitest em modo run para não ficar em modo watch)
+      - name: Run unit tests
+        run: npx vitest run
