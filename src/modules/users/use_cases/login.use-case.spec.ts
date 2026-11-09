@@ -60,7 +60,7 @@ describe('Test Login User Use Case', () => {
 
         vi.mocked(hashServiceMock.compare).mockResolvedValue(true);
 
-        vi.mocked(tokenServiceMock.generate).mockReturnValue('mocked-jwt-token')
+        vi.mocked(tokenServiceMock.generate).mockResolvedValue('mocked-jwt-token')
 
         const login = await loginUserUseCase.execute(input);
 

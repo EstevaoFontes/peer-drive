@@ -32,9 +32,9 @@ export class RequestEmailChangeUseCase {
 
     async execute(token: string, input: IUpdateEmailDTO): Promise<void> {
 
-        const verifyToken = this.tokenService.verify(token);
+        const verifyToken = await this.tokenService.verify(token);
 
-        if (!verifyToken.email || !verifyToken.userID) {
+        if (!verifyToken) {
             throw new Error('Token inválido ou expirado.')
         };
 

@@ -25,7 +25,7 @@ export class ConfirmEmailChangeUseCase {
 
     async execute(input: confirmEmailChangeDTO): Promise<void> {
 
-        const veirifyToken = this.tokenService.verify(input.token);
+        const veirifyToken = await this.tokenService.verify(input.token);
 
         if (!veirifyToken.email || !veirifyToken.userID) {
             throw new Error("Token inválido ou expirado.")

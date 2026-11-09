@@ -36,7 +36,7 @@ export class LoginUserUserCase {
             throw new Error('Email ou senha inválidos.')
         }
 
-        const accessToken = this.tokenService.generate({
+        const accessToken = await this.tokenService.generate({
             userID: user.id.value,
             email: user.email.value
         });

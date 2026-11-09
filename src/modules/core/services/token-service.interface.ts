@@ -6,7 +6,7 @@ export interface IVerificationResult {
 export const TOKEN_SERVICE_TOKEN = 'ITokenService'
 
 export interface ITokenService {
-    generate(payload: {userID: string, email: string}): string
-    verify(token: string): IVerificationResult
+    generate(payload: {userID: string, email: string}): Promise<string>
+    verify(token: string): Promise<IVerificationResult | null>
 }
 

@@ -54,7 +54,7 @@ describe('Confirm Email Change Use Case.', () => {
         };
 
 
-        vi.mocked(tokenServiceMock.verify).mockReturnValue({
+        vi.mocked(tokenServiceMock.verify).mockResolvedValue({
             userID: "abc-123-def",
             email: "paulo@gmail.com"
         });
@@ -88,7 +88,7 @@ describe('Confirm Email Change Use Case.', () => {
             },
         ])('$testCase', async ({ userID, email, expectedError }) => {
 
-            vi.mocked(tokenServiceMock.verify).mockReturnValue({
+            vi.mocked(tokenServiceMock.verify).mockResolvedValue({
                 userID: userID,
                 email: email
             });
@@ -105,7 +105,7 @@ describe('Confirm Email Change Use Case.', () => {
 
     it("Should throw error if ID user is different ID in cache.", async () => {
 
-        vi.mocked(tokenServiceMock.verify).mockReturnValue({
+        vi.mocked(tokenServiceMock.verify).mockResolvedValue({
             userID: "def-456-acb",
             email: "paulo.fontes@gmail.com"
         });
@@ -121,7 +121,7 @@ describe('Confirm Email Change Use Case.', () => {
 
     it("Should throw error if cache is empty", async () => {
 
-        vi.mocked(tokenServiceMock.verify).mockReturnValue({
+        vi.mocked(tokenServiceMock.verify).mockResolvedValue({
             userID: "abc-123-def",
             email: "paulo@gmail.com"
         });
@@ -140,7 +140,7 @@ describe('Confirm Email Change Use Case.', () => {
     it('Should throw error if codes is different.', async () => {
 
 
-        vi.mocked(tokenServiceMock.verify).mockReturnValue({
+        vi.mocked(tokenServiceMock.verify).mockResolvedValue({
             userID: "abc-123-def",
             email: "paulo@gmail.com"
         });
