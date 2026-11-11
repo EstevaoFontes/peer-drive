@@ -32,22 +32,28 @@ export class User {
 
     };
 
-    public changePassword(newPassword: string): void {
+    public changePassword(newPasswordHash: string): void {
 
-        if (!newPassword) {
-            throw new Error('A senha deve ser passada.')
+        if (!newPasswordHash?.trim()) {
+            throw new Error('O hash da senha não pode ser vazio.')
         };
 
-        if (newPassword === this.passwordValue) {
-            throw new Error('A nova senha não atende aos requisitos de segurança.')
-        };
 
-        if (newPassword.length < 6) {
-            throw new Error('A senha não pode ser menor que 6 caracteres.')
-        };
-
-        this.password = newPassword
+        this.password = newPasswordHash
         this.updatedAt = new Date();
+    }
+
+    public changeName(newName: string): void {
+
+        if (!newName || newName.trim().length < 3) {
+            throw new Error('O nome não pode ter menos de 3 caracteres.');
+        }
+
+        if (newName.trim() === this.name) {
+            throw new Error('Os nomes não podem ser iguais.');
+        }
+
+        this.name = newName.trim()
     }
 
 
@@ -57,9 +63,9 @@ export class User {
             throw new Error('O nome não pode ter menos de 3 caracteres.');
         }
 
-        if (password.length < 6) {
-            throw new Error('A senha não pode ser menor que 6 caracteres.');
-        }
+         if (!password.trim()) {
+            throw new Error('A senha está mal formatada.')
+        };
 
         const newEmail = new Email(email);
         const newCpf = new Cpf(cpf);
