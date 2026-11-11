@@ -1,8 +1,8 @@
-import { Injectable, Inject } from "@nestjs/common";
 import { type ICodeGeneratorService, CODE_GENERATOR_SERVICE_TOKEN } from "../../core/services/generate-code-service.interface.js";
 import { type IMailService, MAIL_SERVICE_TOKEN } from "../../core/services/mail-service.interface.js";
 import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../domain/repositories/user.repository.js";
-import { type IPasswordCacheService, PASSWORD_CACHE_SERVICE_TOKEN } from "../../core/services/password-change-store-service.interface.js";
+import { type IPasswordCacheService, PASSWORD_CACHE_SERVICE_TOKEN } from "../../core/services/password-change-cache-service.interface.js";
+import { Injectable, Inject } from "@nestjs/common";
 
 interface IForgotPasswordDTO {
     email: string
@@ -36,8 +36,9 @@ export class RequestForgotPasswordUseCase {
 
         const code = this.codeGenerator.generate();
 
+        await this.passwordCacheService.save(user.id.value, code, 300)
+
         await this.mailService.send(input.email, "Seu código de confirmação.", `Seu código de confirmação é ${code}.`);
 
-        await this.passwordCacheService.save(user.id.value, code, 300)
     };
 };

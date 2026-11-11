@@ -22,31 +22,37 @@ export class ChangePasswordUseCase {
         private readonly tokenService: ITokenService,
     ) { };
 
-    async execute(token: string, input: IChangePasswordDTO): Promise<void>{
+    async execute(token: string, input: IChangePasswordDTO): Promise<void> {
 
-        if(input.confirmNewPassword !== input.newPassword){
+        if (input.confirmNewPassword !== input.newPassword) {
             throw new BadRequestException("As senhas devem ser iguais.",)
         };
 
         const payload = await this.tokenService.verify(token)
 
-        if(!payload){
+        if (!payload) {
             throw new UnauthorizedException("Houve um erro ao te autenticar, tente novamente mais tarde.")
         }
 
         const user = await this.userRepository.findById(payload.userID);
 
-        if(!user){
+        if (!user) {
             throw new NotFoundException("Houve um erro, por favor tente novamente mais tarde.")
         };
 
         const isSamePassword = await this.hashService.compare(input.actualPassword, user.passwordValue);
 
-        if(!isSamePassword){
+        if (!isSamePassword) {
             throw new UnauthorizedException("Senha incorreta.")
         };
 
-        const hashNewPassword = await this.hashService.hash(input.newPassword); 
+        const isNewPasswordEqualToCurrent = await this.hashService.compare(input.newPassword, user.passwordValue);
+
+        if (isNewPasswordEqualToCurrent) {
+            throw new BadRequestException("A nova senha deve ser diferente da senha atual.")
+        }
+
+        const hashNewPassword = await this.hashService.hash(input.newPassword);
 
         user.changePassword(hashNewPassword);
 

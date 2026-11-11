@@ -1,14 +1,7 @@
-export interface IPendingPasswordService {
-    code: string
-}
-
 export interface IPasswordCacheService {
 
     save(userId: string, code: string, timeStampInSeconds: number): Promise<void>
-
-    verifyById(userId: string): Promise<IPendingPasswordService | null>
-
-    remove(id: string): Promise<void>
+    consumeCode(userId: string, code: string): Promise<boolean>
 }
 
 export const PASSWORD_CACHE_SERVICE_TOKEN = 'IPasswordChangeStore';

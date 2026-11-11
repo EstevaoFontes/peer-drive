@@ -1,39 +1,55 @@
-import { describe, it, vi, expect, beforeEach } from "vitest";
 import { ICodeGeneratorService } from "../../core/services/generate-code-service.interface.js";
 import { IMailService } from "../../core/services/mail-service.interface.js";
 import { IUserRepository } from "../domain/repositories/user.repository.js";
-import { IPasswordCacheService } from "../../core/services/password-change-store-service.interface.js";
+import { IPasswordCacheService } from "../../core/services/password-change-cache-service.interface.js";
 import { RequestForgotPasswordUseCase } from "./request-forgot-password.use-case.js";
 import { User } from "../domain/entities/user.entity.js";
+import { describe, it, vi, expect, beforeEach, type Mocked } from "vitest";
 
 describe('Test Request Forgot password.', () => {
 
-    let codeGeneratorServiceMock: ICodeGeneratorService;
-    let mailServiceMock: IMailService;
-    let userRepositoryMock: IUserRepository;
-    let passwordCacheMock: IPasswordCacheService;
+    type ICodeGeneratorServiceMock = Mocked<ICodeGeneratorService>
+    type IMailServiceMock = Mocked<IMailService>
+    type IUserRepositoryMock = Mocked<IUserRepository>
+    type IPasswordCacheServiceMock = Mocked<IPasswordCacheService>
+
+    let codeGeneratorServiceMock: ICodeGeneratorServiceMock;
+    let mailServiceMock: IMailServiceMock;
+    let userRepositoryMock: IUserRepositoryMock;
+    let passwordCacheMock: IPasswordCacheServiceMock;
     let requestForgotPasswordUseCase: RequestForgotPasswordUseCase;
+    let user: User
 
     const input = {
-        email: 'paulo@gmail.com'
+        email: 'john@gmail.com'
     }
+
+    const createUser = () => User.restore('1234-abc', 'john@gmail.com', "John", "54587419516", "qwerty-a-12345", new Date(), new Date());
 
     beforeEach(() => {
         codeGeneratorServiceMock = {
-            generate: vi.fn()
-        } as unknown as ICodeGeneratorService;
+            generate: vi.fn(),
+        }
 
         mailServiceMock = {
             send: vi.fn()
-        } as unknown as IMailService
+        }
 
         userRepositoryMock = {
-            findByEmail: vi.fn()
-        } as unknown as IUserRepository
+            create: vi.fn(),
+            existEmail: vi.fn(),
+            findByEmail: vi.fn(),
+            findById: vi.fn(),
+            update: vi.fn(),
+            delete: vi.fn()
+        }
 
         passwordCacheMock = {
-            save: vi.fn()
-        } as unknown as IPasswordCacheService
+            save: vi.fn(),
+            consumeCode: vi.fn()
+        }
+
+        user = createUser()
 
         requestForgotPasswordUseCase = new RequestForgotPasswordUseCase(
             codeGeneratorServiceMock,
@@ -45,31 +61,80 @@ describe('Test Request Forgot password.', () => {
 
     it("Should verify is email exist, generate code, send email and save new password in cache.", async () => {
 
-        const user = User.restore('1234-abc', 'paulo@gmail.com', "Paulo", "05562954559", "qwerty-a-12345", new Date, new Date);
-
         vi.mocked(userRepositoryMock.findByEmail).mockResolvedValue(user);
 
         vi.mocked(codeGeneratorServiceMock.generate).mockReturnValue("123456");
 
         await requestForgotPasswordUseCase.execute(input);
 
-        expect(codeGeneratorServiceMock.generate).toHaveBeenCalledOnce();
+        expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(input.email);
+        expect(userRepositoryMock.findByEmail).toHaveBeenCalledTimes(1);
+
+        expect(codeGeneratorServiceMock.generate).toHaveBeenCalledTimes(1);
+
+        expect(passwordCacheMock.save).toHaveBeenCalledWith('1234-abc', "123456", 300);
+        expect(passwordCacheMock.save).toHaveBeenCalledTimes(1);
+
         expect(mailServiceMock.send).toHaveBeenCalledWith(
             input.email,
-            "Seu código de confirmação.", `Seu código de confirmação é ${"123456"}.`
+            "Seu código de confirmação.", `Seu código de confirmação é 123456.`
         );
-        expect(passwordCacheMock.save).toHaveBeenCalledWith(user.id.value, "123456", 300);
+        expect(mailServiceMock.send).toHaveBeenCalledTimes(1);
     });
 
-    it("Should return silently and not execute services if email doesn't exist in database..", async () => {
+    it("Should return silently and not execute services if email doesn't exist in database.", async () => {
 
         vi.mocked(userRepositoryMock.findByEmail).mockResolvedValue(null);
 
         await expect(requestForgotPasswordUseCase.execute(input)).resolves.toBeUndefined();
 
+        expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(input.email);
+        expect(userRepositoryMock.findByEmail).toHaveBeenCalledTimes(1);
+
         expect(codeGeneratorServiceMock.generate).not.toHaveBeenCalled();
         expect(mailServiceMock.send).not.toHaveBeenCalled();
         expect(passwordCacheMock.save).not.toHaveBeenCalled();
+    });
+
+    it("Should not save code or send email if code generation fails", async () => {
+
+        vi.mocked(userRepositoryMock.findByEmail).mockResolvedValue(user);
+
+        vi.mocked(codeGeneratorServiceMock.generate)
+            .mockImplementation(() => {
+                throw new Error("Code generation failed");
+            });
+
+        await expect(requestForgotPasswordUseCase.execute(input)).rejects.toThrow("Code generation failed");
+
+        expect(passwordCacheMock.save).not.toHaveBeenCalled();
+        expect(mailServiceMock.send).not.toHaveBeenCalled();
+    });
+
+    it("Should not send email if saving code fails", async () => {
+
+        vi.mocked(userRepositoryMock.findByEmail).mockResolvedValue(user);
+
+        vi.mocked(codeGeneratorServiceMock.generate).mockReturnValue("123456");
+
+        vi.mocked(passwordCacheMock.save).mockRejectedValue(new Error("Cache unavailable"));
+
+        await expect(requestForgotPasswordUseCase.execute(input)).rejects.toThrow("Cache unavailable");
+
+        expect(mailServiceMock.send).not.toHaveBeenCalled();
+    });
+
+    it("Should propagate error if email sending fails", async () => {
+
+        vi.mocked(userRepositoryMock.findByEmail).mockResolvedValue(user);
+
+        vi.mocked(codeGeneratorServiceMock.generate).mockReturnValue("123456");
+
+        vi.mocked(mailServiceMock.send).mockRejectedValue(new Error("Email sending failed"));
+
+        await expect(requestForgotPasswordUseCase.execute(input)).rejects.toThrow("Email sending failed");
+
+        expect(passwordCacheMock.save).toHaveBeenCalledTimes(1);
     });
 });
 

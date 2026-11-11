@@ -152,115 +152,130 @@ describe('User entity', () => {
 
         });
 
-        it.each([
+        it("Should throw error if no input hash password", () => {
 
-            {
-                testCase: "Should throw error if no input new password",
-                oldPassword: '123456',
-                newPassword: "",
-                expectedError: 'A senha deve ser passada.'
-            },
+            const user = User.create('paulo@gmail.com', "paulo", "05562954559", 'old-password');
 
-            {
-                testCase: "Should throw error if new password is equal a old password",
-                oldPassword: '123456',
-                newPassword: "123456",
-                expectedError: 'A nova senha não atende aos requisitos de segurança.'
-            },
+            const newPassword = ""
 
-            {
-                testCase: "Should throw error if new password format is invalid",
-                oldPassword: '123456',
-                newPassword: "123",
-                expectedError: 'A senha não pode ser menor que 6 caracteres.'
-            },
-
-        ])('$testCase', ({ oldPassword, newPassword, expectedError }) => {
-
-            const user = User.create('paulo@gmail.com', "paulo", "05562954559", oldPassword);
-
-
-            expect(() => {
-                user.changePassword(newPassword);
-            }).toThrow(expectedError)
-
+            expect(() => user.changePassword(newPassword))
+                .toThrow("O hash da senha não pode ser vazio.");
         });
+
+    })
+});
+
+
+describe('Change name', () => {
+    it('should change name', () => {
+
+        const user = User.create("paulo@gmail.com", "paulo", "05562954559", "1234567");
+
+        const oldUpdatedAt = user.updatedAt;
+
+        user.changeName('Estevao');
+
+        expect(user.name).toBe('Estevao');
+
+        expect(user.updatedAt.getTime()).toBeGreaterThanOrEqual(oldUpdatedAt.getTime());
+
     });
 
 
-    describe('Should throw errors in creation.', () => {
+    it.each([
 
-        it.each([
-            {
-                testCase: "Should throw a Error when a name less then 3 characters.",
-                email: "pauloFontes@gmail.com",
-                name: "Es",
-                cpf: "055.629.545.59",
-                password: "teste123",
-                expectedError: 'O nome não pode ter menos de 3 caracteres.'
-            },
-            {
-                testCase: "Should throw a Error when a name is empty.",
-                email: "pauloFontes@gmail.com",
-                name: "",
-                cpf: "055.629.545.59",
-                password: "teste123",
-                expectedError: 'O nome não pode ter menos de 3 caracteres.'
-            },
-            {
-                testCase: "Should throw a Error when an email it's bad formatted.",
-                email: "pauloFontesgmail.com",
-                name: "Estêvao Fontes",
-                cpf: "055.629.545.59",
-                password: "teste123",
-                expectedError: 'Formato de e-mail invalido.'
-            },
-            {
-                testCase: "Should throw a Error when an email is empty.",
-                email: "",
-                name: "Estêvao Fontes",
-                cpf: "055.629.545.59",
-                password: "teste123",
-                expectedError: "O e-mail não pode ser vazio."
-            },
-            {
-                testCase: "Should throw a Error when an cpf it's bad formatted.",
-                email: "pauloFontes@gmail.com",
-                name: "Estêvao Fontes",
-                cpf: "000.000.000.00",
-                password: "teste123",
-                expectedError: 'CPF invalido.'
-            },
-            {
-                testCase: "Should throw a Error when an cpf is empty.",
-                email: "pauloFontes@gmail.com",
-                name: "Estêvao Fontes",
-                cpf: "",
-                password: "teste123",
-                expectedError: "O CPF não pode ser vazio."
-            },
-            {
-                testCase: "Should throw a Error when an password is empty.",
-                email: "pauloFontes@gmail.com",
-                name: "Estêvao Fontes",
-                cpf: "055.629.545.59",
-                password: "",
-                expectedError: 'A senha não pode ser menor que 6 caracteres.'
-            },
-            {
-                testCase: "Should throw a Error when an password it's bad formated.",
-                email: "pauloFontes@gmail.com",
-                name: "Estêvao Fontes",
-                cpf: "",
-                password: "123",
-                expectedError: 'A senha não pode ser menor que 6 caracteres.'
-            }
-        ])('$testCase', ({ email, name, cpf, password, expectedError }) => {
+        {
+            testCase: "Should throw error if input has less then 3 characters",
+            oldName: 'Paulo',
+            newName: "",
+            expectedError: 'O nome não pode ter menos de 3 caracteres.'
+        },
 
-            expect(() => {
-                User.create(email, name, cpf, password);
-            }).toThrow(expectedError);
+        {
+            testCase: "Should throw error if old name and new name is equal",
+            oldName: 'Paulo',
+            newName: 'Paulo',
+            expectedError: 'Os nomes não podem ser iguais.'
+        },
 
-        });
+    ])('$testCase', ({ oldName, newName, expectedError }) => {
+
+        const user = User.create('paulo@gmail.com', oldName, "05562954559", "123456");
+
+
+        expect(() => {
+            user.changeName(newName);
+        }).toThrow(expectedError)
+
+    });
+
+})
+
+
+describe('Should throw errors in creation.', () => {
+
+    it.each([
+        {
+            testCase: "Should throw a Error when a name less then 3 characters.",
+            email: "pauloFontes@gmail.com",
+            name: "Es",
+            cpf: "055.629.545.59",
+            password: "teste123",
+            expectedError: 'O nome não pode ter menos de 3 caracteres.'
+        },
+        {
+            testCase: "Should throw a Error when a name is empty.",
+            email: "pauloFontes@gmail.com",
+            name: "",
+            cpf: "055.629.545.59",
+            password: "teste123",
+            expectedError: 'O nome não pode ter menos de 3 caracteres.'
+        },
+        {
+            testCase: "Should throw a Error when an email it's bad formatted.",
+            email: "pauloFontesgmail.com",
+            name: "Estêvao Fontes",
+            cpf: "055.629.545.59",
+            password: "teste123",
+            expectedError: 'Formato de e-mail invalido.'
+        },
+        {
+            testCase: "Should throw a Error when an email is empty.",
+            email: "",
+            name: "Estêvao Fontes",
+            cpf: "055.629.545.59",
+            password: "teste123",
+            expectedError: "O e-mail não pode ser vazio."
+        },
+        {
+            testCase: "Should throw a Error when an cpf it's bad formatted.",
+            email: "pauloFontes@gmail.com",
+            name: "Estêvao Fontes",
+            cpf: "000.000.000.00",
+            password: "teste123",
+            expectedError: 'CPF invalido.'
+        },
+        {
+            testCase: "Should throw a Error when an cpf is empty.",
+            email: "pauloFontes@gmail.com",
+            name: "Estêvao Fontes",
+            cpf: "",
+            password: "teste123",
+            expectedError: "O CPF não pode ser vazio."
+        },
+        {
+            testCase: "Should throw a Error when an password is empty.",
+            email: "pauloFontes@gmail.com",
+            name: "Estêvao Fontes",
+            cpf: "055.629.545.59",
+            password: "",
+            expectedError: 'A senha está mal formatada.'
+        },
+    ])('$testCase', ({ email, name, cpf, password, expectedError }) => {
+
+        expect(() => {
+            User.create(email, name, cpf, password);
+        }).toThrow(expectedError);
+
     });
 });
