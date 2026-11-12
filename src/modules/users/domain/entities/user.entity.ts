@@ -20,11 +20,11 @@ export class User {
     public changeEmail(newEmail: string): void {
 
         if (!newEmail) {
-            throw new Error('O email deve ser passado.')
+            throw new Error("O email deve ser passado.");
         };
 
         if (newEmail === this.email.value) {
-            throw new Error('O novo email deve ser diferente do atual.')
+            throw new Error("O novo email deve ser diferente do atual.");
         };
 
         this.email = new Email(newEmail);
@@ -35,36 +35,36 @@ export class User {
     public changePassword(newPasswordHash: string): void {
 
         if (!newPasswordHash?.trim()) {
-            throw new Error('O hash da senha não pode ser vazio.')
+            throw new Error("O hash da senha não pode ser vazio.");
         };
 
 
-        this.password = newPasswordHash
+        this.password = newPasswordHash;
         this.updatedAt = new Date();
     }
 
     public changeName(newName: string): void {
 
         if (!newName || newName.trim().length < 3) {
-            throw new Error('O nome não pode ter menos de 3 caracteres.');
+            throw new Error("O nome não pode ter menos de 3 caracteres.");
         }
 
         if (newName.trim() === this.name) {
-            throw new Error('Os nomes não podem ser iguais.');
+            throw new Error("Os nomes não podem ser iguais.");
         }
 
-        this.name = newName.trim()
+        this.name = newName.trim();
     }
 
 
     static create(email: string, name: string, cpf: string, password: string): User {
 
         if (!name || name.trim().length < 3) {
-            throw new Error('O nome não pode ter menos de 3 caracteres.');
+            throw new Error("O nome não pode ter menos de 3 caracteres.");
         }
 
          if (!password.trim()) {
-            throw new Error('A senha está mal formatada.')
+            throw new Error("A senha está mal formatada.");
         };
 
         const newEmail = new Email(email);
@@ -102,6 +102,6 @@ export class User {
             password,
             createdAt,
             updatedAt
-        )
+        );
     };
 };

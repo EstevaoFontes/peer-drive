@@ -24,16 +24,16 @@ export class LoginUserUserCase {
 
     async execute(input: IUserLoginDTO): Promise<{ accessToken: string }> {
 
-        const user = await this.userRepository.findByEmail(input.email)
+        const user = await this.userRepository.findByEmail(input.email);
 
         if (!user) {
-            throw new BadRequestException('Email ou senha inválidos.')
+            throw new BadRequestException("Email ou senha inválidos.");
         }
 
-        const comparePassword = await this.hashService.compare(input.password, user.passwordValue)
+        const comparePassword = await this.hashService.compare(input.password, user.passwordValue);
 
         if (!comparePassword) {
-            throw new BadRequestException('Email ou senha inválidos.')
+            throw new BadRequestException("Email ou senha inválidos.");
         }
 
         const accessToken = await this.tokenService.generate({
@@ -42,7 +42,7 @@ export class LoginUserUserCase {
         });
 
         if(!accessToken){
-            throw new InternalServerErrorException("Houve um erro ao te autenticar, por favor tente novamente mais tarde.")
+            throw new InternalServerErrorException("Houve um erro ao te autenticar, por favor tente novamente mais tarde.");
         }
 
         return { accessToken };

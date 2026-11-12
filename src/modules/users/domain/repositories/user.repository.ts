@@ -1,6 +1,6 @@
 import { User } from "../entities/user.entity.js";
 
-export const USER_REPOSITORY_TOKEN = "IUserRepository"
+export const USER_REPOSITORY_TOKEN = "IUserRepository";
 
 export interface IUserRepository {
     create(user: User): Promise<void>;

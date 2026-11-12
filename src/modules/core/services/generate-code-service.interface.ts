@@ -3,4 +3,4 @@ export interface ICodeGeneratorService {
 
 }
 
-export const CODE_GENERATOR_SERVICE_TOKEN = 'ICodeGeneratorService'
+export const CODE_GENERATOR_SERVICE_TOKEN = "ICodeGeneratorService";

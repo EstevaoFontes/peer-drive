@@ -12,7 +12,7 @@ export class PickupTruck extends Vehicle{
             [rentalPurpose.DELIVERIES]: (base) => base * 1.20,
             [rentalPurpose.FREIGHT]: (base) => base * 1.25,
             [rentalPurpose.CONSTRUCTION]: (base) => base * 1.30,
-        }
+        };
     }
 
     constructor(
@@ -35,6 +35,6 @@ export class PickupTruck extends Vehicle{
                 dailyRate,
                 imageUrl,
                 isAvaible ?? true
-            )
+            );
         }
 }

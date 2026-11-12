@@ -14,17 +14,17 @@ export class DeleteUserUseCase {
 
     async execute(token: string): Promise<void> {
 
-        const payload = await this.tokenService.verify(token)
+        const payload = await this.tokenService.verify(token);
 
         if (!payload) {
-            throw new UnauthorizedException("Token inválido ou expirado.")
+            throw new UnauthorizedException("Token inválido ou expirado.");
         }
 
 
         const deleted = await this.userRepository.delete(payload.userID);
 
         if (!deleted) {
-            throw new NotFoundException("Usuário não encontrado.")
+            throw new NotFoundException("Usuário não encontrado.");
         }
     };
 };

@@ -4,19 +4,19 @@ import { UserId } from "../../../users/domain/value-objects/id-create.value-obje
 import { VehicleId } from "../value-objects/vehicle-id.value-objects.js";
 import { rentalPurpose } from "../enums/rental-purpose.enum.js";
 
-describe('Car entity', () => {
+describe("Car entity", () => {
 
     const car = new Car(
         new VehicleId("123a"),
-        new UserId('1234b'),
+        new UserId("1234b"),
         "Argo",
         "Fiat",
         "2019",
         130,
         ["imagem1.jpg"]
-    )
+    );
 
-    describe('Main calculation', () => {
+    describe("Main calculation", () => {
         it.each([
             { purpose: rentalPurpose.TOUR, expectedCost: 130.00 },
             { purpose: rentalPurpose.TRIPS, expectedCost: 143.00 },
@@ -25,14 +25,14 @@ describe('Car entity', () => {
         ])("should calculate the cost according to the purpose.", ({ purpose, expectedCost }) => {
             const cost = car.calculateCostByTypeUse(purpose);
             expect(cost).toBeCloseTo(expectedCost, 2);
-        })
-    })
+        });
+    });
 
-    describe('Validations and Errors', () => {
-        it('should throw an error when the vehicle type is not supported', () => {
+    describe("Validations and Errors", () => {
+        it("should throw an error when the vehicle type is not supported", () => {
             expect(() => {
                 car.calculateCostByTypeUse(rentalPurpose.FREIGHT);
-            }).toThrow("Esse veículo não aceita esse tipo de uso.")
-        })
-    })
-})
+            }).toThrow("Esse veículo não aceita esse tipo de uso.");
+        });
+    });
+});

@@ -23,13 +23,13 @@ export class ChangeUserNameUseCase {
         const payload = await this.tokenService.verify(token);
 
         if (!payload) {
-            throw new UnauthorizedException("Ocorreu um erro ao autenticar, tente novamente.")
+            throw new UnauthorizedException("Ocorreu um erro ao autenticar, tente novamente.");
         };
 
         const user = await this.userRepository.findById(payload.userID);
 
         if (!user) {
-            throw new NotFoundException("Ocorreu um erro, tente novamente.")
+            throw new NotFoundException("Ocorreu um erro, tente novamente.");
         };
 
         user.changeName(input.name);

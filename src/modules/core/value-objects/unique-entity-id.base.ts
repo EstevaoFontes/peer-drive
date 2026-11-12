@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 
 export abstract class UniqueEntityId {
 
-    protected readonly _value: string
+    protected readonly _value: string;
 
     constructor(id?: string){
         this._value = id ?? randomUUID();

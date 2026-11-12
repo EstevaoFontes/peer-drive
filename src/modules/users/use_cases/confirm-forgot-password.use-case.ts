@@ -26,11 +26,11 @@ export class ConfirmForgotPasswordUseCase {
     async execute(input: IPasswordConfirmDTO): Promise<void> {
 
         if (input.newPassword.trim().length < 6) {
-            throw new BadRequestException('A senha não pode ser menor que 6 caracteres.')
+            throw new BadRequestException("A senha não pode ser menor que 6 caracteres.");
         };
 
         if (input.newPassword !== input.confirmNewPassword) {
-            throw new BadRequestException("As senhas devem ser iguais.")
+            throw new BadRequestException("As senhas devem ser iguais.");
         }
 
         const user = await this.userRepository.findByEmail(input.email);
@@ -42,7 +42,7 @@ export class ConfirmForgotPasswordUseCase {
         const pending = await this.passwordCacheService.consumeCode(user.id.value, input.code);
 
         if (!pending) {
-            throw new NotFoundException("Código inválido ou expirado.")
+            throw new NotFoundException("Código inválido ou expirado.");
         }
 
         const hashPassword = await this.hashService.hash(input.newPassword);

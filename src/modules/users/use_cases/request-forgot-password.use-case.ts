@@ -31,12 +31,12 @@ export class RequestForgotPasswordUseCase {
         const user = await this.userRepository.findByEmail(input.email);
 
         if (!user) {
-            return
+            return;
         };
 
         const code = this.codeGenerator.generate();
 
-        await this.passwordCacheService.save(user.id.value, code, 300)
+        await this.passwordCacheService.save(user.id.value, code, 300);
 
         await this.mailService.send(input.email, "Seu código de confirmação.", `Seu código de confirmação é ${code}.`);
 

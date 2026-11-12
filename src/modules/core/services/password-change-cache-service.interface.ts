@@ -4,4 +4,4 @@ export interface IPasswordCacheService {
     consumeCode(userId: string, code: string): Promise<boolean>
 }
 
-export const PASSWORD_CACHE_SERVICE_TOKEN = 'IPasswordChangeStore';
+export const PASSWORD_CACHE_SERVICE_TOKEN = "IPasswordChangeStore";

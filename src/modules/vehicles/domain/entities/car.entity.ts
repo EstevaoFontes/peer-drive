@@ -12,7 +12,7 @@ export class Car extends Vehicle {
             [rentalPurpose.TRIPS]: (base) => base * 1.10,
             [rentalPurpose.DELIVERIES]: (base) => base * 1.20,
             [rentalPurpose.APP_RIDES]: (base) => base * 1.25
-        }
+        };
     }
 
     constructor(
@@ -35,7 +35,7 @@ export class Car extends Vehicle {
             dailyRate,
             imageUrl,
             isAvaible ?? true
-        )
+        );
     }
 
 
