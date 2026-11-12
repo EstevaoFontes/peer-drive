@@ -10,7 +10,7 @@ export class Truck extends Vehicle {
         return {
             [rentalPurpose.FREIGHT]: (base) => base * 1.0,
             [rentalPurpose.CONSTRUCTION]: (base) => base * 1.30
-        }
+        };
     }
 
 
@@ -34,7 +34,7 @@ export class Truck extends Vehicle {
             dailyRate,
             imageUrl,
             isAvaible ?? true
-        )
+        );
     }
 
 }

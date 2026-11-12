@@ -24,20 +24,20 @@ export class CreateUserUseCase {
     async execute(input: CreateUserDTO): Promise<void> {
 
         if (input.password.trim() !== input.confirmPassword.trim()) {
-            throw new BadRequestException('As senhas não são iguais.')
+            throw new BadRequestException("As senhas não são iguais.");
         }
 
         const isExistEmail = await this.userRepository.existEmail(input.email);
 
         if (isExistEmail) {
-            throw new BadRequestException('Esse email ja está cadastrado.')
+            throw new BadRequestException("Esse email ja está cadastrado.");
         }
 
-        const hashPassword = await this.hashService.hash(input.password)
+        const hashPassword = await this.hashService.hash(input.password);
 
-        const user = User.create(input.email, input.name, input.cpf, hashPassword)
+        const user = User.create(input.email, input.name, input.cpf, hashPassword);
 
-        await this.userRepository.create(user)
+        await this.userRepository.create(user);
 
     };
 };

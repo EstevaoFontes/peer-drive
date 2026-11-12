@@ -12,13 +12,13 @@ describe("Test Change Name User Use Case", () => {
     let userRepositoryMock: IUserRepositoryMock;
     let tokenServiceMock: ITokenServiceMock;
     let changeUserNameUseCase: ChangeUserNameUseCase;
-    let user: User
+    let user: User;
 
     const input = {
         name: "Luke"
     };
 
-    const createUser = () => User.restore('1234', "teste@gmail.com", "John", "54587419516", "123456-abc", new Date, new Date)
+    const createUser = () => User.restore("1234", "teste@gmail.com", "John", "54587419516", "123456-abc", new Date, new Date);
 
     beforeEach(() => {
         userRepositoryMock = {
@@ -28,31 +28,31 @@ describe("Test Change Name User Use Case", () => {
             findById: vi.fn(),
             update: vi.fn(),
             delete: vi.fn()
-        }
+        };
 
         tokenServiceMock = {
             generate: vi.fn(),
             verify: vi.fn()
-        }
+        };
 
         user = createUser();
 
-        changeUserNameUseCase = new ChangeUserNameUseCase(userRepositoryMock, tokenServiceMock)
+        changeUserNameUseCase = new ChangeUserNameUseCase(userRepositoryMock, tokenServiceMock);
     });
 
     it("Should verify token, get user in database, change name and update user.", async () => {
 
-        vi.mocked(tokenServiceMock.verify).mockResolvedValue({ userID: 'abc-1234', email: "teste@gmail.com" });
+        vi.mocked(tokenServiceMock.verify).mockResolvedValue({ userID: "abc-1234", email: "teste@gmail.com" });
 
         vi.mocked(userRepositoryMock.findById).mockResolvedValue(user);
 
         await changeUserNameUseCase.execute("abc-123-cde", input);
 
-        expect(user.name).toBe('Luke');
+        expect(user.name).toBe("Luke");
         expect(tokenServiceMock.verify).toHaveBeenCalledWith("abc-123-cde");
-        expect(userRepositoryMock.findById).toHaveBeenCalledWith('abc-1234');
+        expect(userRepositoryMock.findById).toHaveBeenCalledWith("abc-1234");
         expect(userRepositoryMock.update).toHaveBeenCalledWith(user);
-        expect(userRepositoryMock.update).toHaveBeenCalledTimes(1)
+        expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
 
     });
 
@@ -60,7 +60,7 @@ describe("Test Change Name User Use Case", () => {
 
         vi.mocked(tokenServiceMock.verify).mockResolvedValue(null);
 
-        await expect(changeUserNameUseCase.execute("abc-123-cde", input)).rejects.toThrow("Ocorreu um erro ao autenticar, tente novamente.")
+        await expect(changeUserNameUseCase.execute("abc-123-cde", input)).rejects.toThrow("Ocorreu um erro ao autenticar, tente novamente.");
 
         expect(tokenServiceMock.verify).toHaveBeenCalledWith("abc-123-cde");
         expect(userRepositoryMock.findById).not.toHaveBeenCalled();
@@ -69,13 +69,13 @@ describe("Test Change Name User Use Case", () => {
 
     it("Should throw error if user is not find.", async () => {
 
-        vi.mocked(tokenServiceMock.verify).mockResolvedValue({ userID: 'abc-1234', email: "teste@gmail.com" });
+        vi.mocked(tokenServiceMock.verify).mockResolvedValue({ userID: "abc-1234", email: "teste@gmail.com" });
 
         vi.mocked(userRepositoryMock.findById).mockResolvedValue(null);
 
-        await expect(changeUserNameUseCase.execute("abc-123-cde", input)).rejects.toThrow("Ocorreu um erro, tente novamente.")
+        await expect(changeUserNameUseCase.execute("abc-123-cde", input)).rejects.toThrow("Ocorreu um erro, tente novamente.");
 
-        expect(userRepositoryMock.findById).toHaveBeenCalledWith('abc-1234');
+        expect(userRepositoryMock.findById).toHaveBeenCalledWith("abc-1234");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
@@ -84,17 +84,17 @@ describe("Test Change Name User Use Case", () => {
         const rejectInput = {
             ...input,
             name: "Lu"
-        }
+        };
 
-        vi.mocked(tokenServiceMock.verify).mockResolvedValue({ userID: 'abc-1234', email: "teste@gmail.com" });
+        vi.mocked(tokenServiceMock.verify).mockResolvedValue({ userID: "abc-1234", email: "teste@gmail.com" });
 
         vi.mocked(userRepositoryMock.findById).mockResolvedValue(user);
 
-        await expect(changeUserNameUseCase.execute("abc-123-cde", rejectInput)).rejects.toThrow("O nome não pode ter menos de 3 caracteres.")
+        await expect(changeUserNameUseCase.execute("abc-123-cde", rejectInput)).rejects.toThrow("O nome não pode ter menos de 3 caracteres.");
 
         expect(tokenServiceMock.verify).toHaveBeenCalledWith("abc-123-cde");
-        expect(userRepositoryMock.findById).toHaveBeenCalledWith('abc-1234');
-        expect(user.name).toBe('John');
+        expect(userRepositoryMock.findById).toHaveBeenCalledWith("abc-1234");
+        expect(user.name).toBe("John");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
@@ -103,17 +103,17 @@ describe("Test Change Name User Use Case", () => {
         const rejectInput = {
             ...input,
             name: "John"
-        }
+        };
 
-        vi.mocked(tokenServiceMock.verify).mockResolvedValue({ userID: 'abc-1234', email: "teste@gmail.com" });
+        vi.mocked(tokenServiceMock.verify).mockResolvedValue({ userID: "abc-1234", email: "teste@gmail.com" });
 
         vi.mocked(userRepositoryMock.findById).mockResolvedValue(user);
 
-        await expect(changeUserNameUseCase.execute("abc-123-cde", rejectInput)).rejects.toThrow("Os nomes não podem ser iguais.")
+        await expect(changeUserNameUseCase.execute("abc-123-cde", rejectInput)).rejects.toThrow("Os nomes não podem ser iguais.");
 
         expect(tokenServiceMock.verify).toHaveBeenCalledWith("abc-123-cde");
-        expect(userRepositoryMock.findById).toHaveBeenCalledWith('abc-1234');
-        expect(user.name).toBe('John');
+        expect(userRepositoryMock.findById).toHaveBeenCalledWith("abc-1234");
+        expect(user.name).toBe("John");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 });

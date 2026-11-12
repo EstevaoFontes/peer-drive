@@ -5,7 +5,7 @@ import { ChangePasswordUseCase } from "./change-password.use-case.js";
 import { describe, it, vi, beforeEach, expect, type Mocked } from "vitest";
 import { User } from "../domain/entities/user.entity.js";
 
-describe('Test change password.', () => {
+describe("Test change password.", () => {
 
     type IHashServiceMock = Mocked<IHashService>;
     type IUserRepositoryMock = Mocked<IUserRepository>;
@@ -15,7 +15,7 @@ describe('Test change password.', () => {
     let userRepositoryMock: IUserRepositoryMock;
     let tokenServiceMock: ITokenServiceMock;
     let changePasswordUseCase: ChangePasswordUseCase;
-    let user: User
+    let user: User;
 
     const input = {
         actualPassword: "teste-123",
@@ -23,13 +23,13 @@ describe('Test change password.', () => {
         confirmNewPassword: "nova-senha-123"
     };
 
-    const recreateUser = () => User.restore('123-abc', 'teste@gmail.com', 'John', '54587419516', 'teste-123-hash', new Date(), new Date());
+    const recreateUser = () => User.restore("123-abc", "teste@gmail.com", "John", "54587419516", "teste-123-hash", new Date(), new Date());
 
     beforeEach(() => {
         hashServiceMock = {
             compare: vi.fn(),
             hash: vi.fn()
-        }
+        };
 
         userRepositoryMock = {
             create: vi.fn(),
@@ -38,22 +38,22 @@ describe('Test change password.', () => {
             findById: vi.fn(),
             update: vi.fn(),
             delete: vi.fn()
-        }
+        };
 
         tokenServiceMock = {
             generate: vi.fn(),
             verify: vi.fn()
-        }
+        };
 
-        user = recreateUser()
+        user = recreateUser();
 
         changePasswordUseCase = new ChangePasswordUseCase(userRepositoryMock, hashServiceMock, tokenServiceMock);
     });
 
-    it('Should verify token, get user by ID, compare password, change password and update in database.', async () => {
+    it("Should verify token, get user by ID, compare password, change password and update in database.", async () => {
 
         vi.mocked(tokenServiceMock.verify).mockResolvedValue({
-            userID: '123-abc',
+            userID: "123-abc",
             email: "paulo@gmail.com"
         });
 
@@ -61,15 +61,15 @@ describe('Test change password.', () => {
 
         vi.mocked(hashServiceMock.compare)
             .mockResolvedValueOnce(true)
-            .mockResolvedValueOnce(false)
+            .mockResolvedValueOnce(false);
 
-        vi.mocked(hashServiceMock.hash).mockResolvedValue('abc-852-qwe')
+        vi.mocked(hashServiceMock.hash).mockResolvedValue("abc-852-qwe");
 
-        await changePasswordUseCase.execute('abc-cde-1234', input);
+        await changePasswordUseCase.execute("abc-cde-1234", input);
 
-        expect(user.passwordValue).toBe('abc-852-qwe')
-        expect(tokenServiceMock.verify).toHaveBeenCalledWith('abc-cde-1234');
-        expect(userRepositoryMock.findById).toHaveBeenCalledWith('123-abc');
+        expect(user.passwordValue).toBe("abc-852-qwe");
+        expect(tokenServiceMock.verify).toHaveBeenCalledWith("abc-cde-1234");
+        expect(userRepositoryMock.findById).toHaveBeenCalledWith("123-abc");
 
         expect(hashServiceMock.compare).toHaveBeenNthCalledWith(
             1,
@@ -85,7 +85,7 @@ describe('Test change password.', () => {
 
         expect(hashServiceMock.hash).toHaveBeenCalledWith(input.newPassword);
         expect(userRepositoryMock.update).toHaveBeenCalledWith(user);
-        expect(userRepositoryMock.update).toHaveBeenCalledTimes(1)
+        expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
     });
 
     it("Should throw error if password is not equal.", async () => {
@@ -95,14 +95,14 @@ describe('Test change password.', () => {
             confirmNewPassword: "senha-diferente"
         };
 
-        await expect(changePasswordUseCase.execute('abc-cde-1234', inputNewPasswordDifferent)).rejects.toThrow("As senhas devem ser iguais.");
+        await expect(changePasswordUseCase.execute("abc-cde-1234", inputNewPasswordDifferent)).rejects.toThrow("As senhas devem ser iguais.");
 
-        expect(user.passwordValue).toBe('teste-123-hash')
+        expect(user.passwordValue).toBe("teste-123-hash");
         expect(tokenServiceMock.verify).not.toHaveBeenCalled();
         expect(userRepositoryMock.findById).not.toHaveBeenCalled();
         expect(hashServiceMock.compare).not.toHaveBeenCalled();
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(userRepositoryMock.update).not.toHaveBeenCalled()
+        expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
     it("Should throw error if token return null.", async () => {
@@ -110,36 +110,36 @@ describe('Test change password.', () => {
         vi.mocked(tokenServiceMock.verify).mockResolvedValue(null);
 
 
-        await expect(changePasswordUseCase.execute('abc-cde-1234', input)).rejects.toThrow("Houve um erro ao te autenticar, tente novamente mais tarde.");
+        await expect(changePasswordUseCase.execute("abc-cde-1234", input)).rejects.toThrow("Houve um erro ao te autenticar, tente novamente mais tarde.");
 
-        expect(user.passwordValue).toBe('teste-123-hash')
+        expect(user.passwordValue).toBe("teste-123-hash");
         expect(userRepositoryMock.findById).not.toHaveBeenCalled();
         expect(hashServiceMock.compare).not.toHaveBeenCalled();
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(userRepositoryMock.update).not.toHaveBeenCalled()
+        expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
-    it('Should throw error if user return null', async () => {
+    it("Should throw error if user return null", async () => {
 
         vi.mocked(tokenServiceMock.verify).mockResolvedValue({
-            userID: '123-abc',
+            userID: "123-abc",
             email: "paulo@gmail.com"
         });
 
         vi.mocked(userRepositoryMock.findById).mockResolvedValue(null);
 
-        await expect(changePasswordUseCase.execute('abc-cde-1234', input)).rejects.toThrow("Houve um erro, por favor tente novamente mais tarde.");
+        await expect(changePasswordUseCase.execute("abc-cde-1234", input)).rejects.toThrow("Houve um erro, por favor tente novamente mais tarde.");
 
-        expect(user.passwordValue).toBe('teste-123-hash')
+        expect(user.passwordValue).toBe("teste-123-hash");
         expect(hashServiceMock.compare).not.toHaveBeenCalled();
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(userRepositoryMock.update).not.toHaveBeenCalled()
+        expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
     it("Should throw error if verification password in database and input is not equal.", async () => {
 
         vi.mocked(tokenServiceMock.verify).mockResolvedValue({
-            userID: '123-abc',
+            userID: "123-abc",
             email: "paulo@gmail.com"
         });
 
@@ -147,18 +147,18 @@ describe('Test change password.', () => {
 
         vi.mocked(hashServiceMock.compare).mockResolvedValue(false);
 
-        await expect(changePasswordUseCase.execute('abc-cde-1234', input)).rejects.toThrow("Senha incorreta.");
+        await expect(changePasswordUseCase.execute("abc-cde-1234", input)).rejects.toThrow("Senha incorreta.");
 
-        expect(user.passwordValue).toBe('teste-123-hash')
+        expect(user.passwordValue).toBe("teste-123-hash");
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(userRepositoryMock.update).not.toHaveBeenCalled()
+        expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
 
     it("Should throw error if new password and password in database and input is equal.", async () => {
 
         vi.mocked(tokenServiceMock.verify).mockResolvedValue({
-            userID: '123-abc',
+            userID: "123-abc",
             email: "paulo@gmail.com"
         });
 
@@ -166,19 +166,19 @@ describe('Test change password.', () => {
 
         vi.mocked(hashServiceMock.compare)
             .mockResolvedValueOnce(true)
-            .mockResolvedValueOnce(true)
+            .mockResolvedValueOnce(true);
 
-        await expect(changePasswordUseCase.execute('abc-cde-1234', input)).rejects.toThrow("A nova senha deve ser diferente da senha atual.");
+        await expect(changePasswordUseCase.execute("abc-cde-1234", input)).rejects.toThrow("A nova senha deve ser diferente da senha atual.");
 
-        expect(user.passwordValue).toBe('teste-123-hash')
+        expect(user.passwordValue).toBe("teste-123-hash");
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(userRepositoryMock.update).not.toHaveBeenCalled()
+        expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
     it("Should throw error if hash password is empty.", async () => {
 
         vi.mocked(tokenServiceMock.verify).mockResolvedValue({
-            userID: '123-abc',
+            userID: "123-abc",
             email: "paulo@gmail.com"
         });
 
@@ -186,14 +186,14 @@ describe('Test change password.', () => {
 
         vi.mocked(hashServiceMock.compare)
             .mockResolvedValueOnce(true)
-            .mockResolvedValueOnce(false)
+            .mockResolvedValueOnce(false);
 
-        vi.mocked(hashServiceMock.hash).mockResolvedValue('')
+        vi.mocked(hashServiceMock.hash).mockResolvedValue("");
 
 
-        await expect(changePasswordUseCase.execute('abc-cde-1234', input)).rejects.toThrow('O hash da senha não pode ser vazio.');
+        await expect(changePasswordUseCase.execute("abc-cde-1234", input)).rejects.toThrow("O hash da senha não pode ser vazio.");
 
-        expect(user.passwordValue).toBe('teste-123-hash')
-        expect(userRepositoryMock.update).not.toHaveBeenCalled()
+        expect(user.passwordValue).toBe("teste-123-hash");
+        expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 });

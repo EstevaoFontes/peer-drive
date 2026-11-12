@@ -1,4 +1,4 @@
-import {cpf as cpfValidation} from 'cpf-cnpj-validator'
+import {cpf as cpfValidation} from "cpf-cnpj-validator";
 
 export class Cpf{
     private readonly _value: string;
@@ -9,10 +9,10 @@ export class Cpf{
             throw new Error("O CPF não pode ser vazio.");
         }
 
-        const cleanedCpf = cpf.replace(/\D/g, '');
+        const cleanedCpf = cpf.replace(/\D/g, "");
 
         if(!cpfValidation.isValid(cleanedCpf)){
-            throw new Error('CPF invalido.');
+            throw new Error("CPF invalido.");
         }
 
         this._value = cleanedCpf;

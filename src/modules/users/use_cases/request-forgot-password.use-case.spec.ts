@@ -6,34 +6,34 @@ import { RequestForgotPasswordUseCase } from "./request-forgot-password.use-case
 import { User } from "../domain/entities/user.entity.js";
 import { describe, it, vi, expect, beforeEach, type Mocked } from "vitest";
 
-describe('Test Request Forgot password.', () => {
+describe("Test Request Forgot password.", () => {
 
-    type ICodeGeneratorServiceMock = Mocked<ICodeGeneratorService>
-    type IMailServiceMock = Mocked<IMailService>
-    type IUserRepositoryMock = Mocked<IUserRepository>
-    type IPasswordCacheServiceMock = Mocked<IPasswordCacheService>
+    type ICodeGeneratorServiceMock = Mocked<ICodeGeneratorService>;
+    type IMailServiceMock = Mocked<IMailService>;
+    type IUserRepositoryMock = Mocked<IUserRepository>;
+    type IPasswordCacheServiceMock = Mocked<IPasswordCacheService>;
 
     let codeGeneratorServiceMock: ICodeGeneratorServiceMock;
     let mailServiceMock: IMailServiceMock;
     let userRepositoryMock: IUserRepositoryMock;
     let passwordCacheMock: IPasswordCacheServiceMock;
     let requestForgotPasswordUseCase: RequestForgotPasswordUseCase;
-    let user: User
+    let user: User;
 
     const input = {
-        email: 'john@gmail.com'
-    }
+        email: "john@gmail.com"
+    };
 
-    const createUser = () => User.restore('1234-abc', 'john@gmail.com', "John", "54587419516", "qwerty-a-12345", new Date(), new Date());
+    const createUser = () => User.restore("1234-abc", "john@gmail.com", "John", "54587419516", "qwerty-a-12345", new Date(), new Date());
 
     beforeEach(() => {
         codeGeneratorServiceMock = {
             generate: vi.fn(),
-        }
+        };
 
         mailServiceMock = {
             send: vi.fn()
-        }
+        };
 
         userRepositoryMock = {
             create: vi.fn(),
@@ -42,14 +42,14 @@ describe('Test Request Forgot password.', () => {
             findById: vi.fn(),
             update: vi.fn(),
             delete: vi.fn()
-        }
+        };
 
         passwordCacheMock = {
             save: vi.fn(),
             consumeCode: vi.fn()
-        }
+        };
 
-        user = createUser()
+        user = createUser();
 
         requestForgotPasswordUseCase = new RequestForgotPasswordUseCase(
             codeGeneratorServiceMock,
@@ -72,12 +72,12 @@ describe('Test Request Forgot password.', () => {
 
         expect(codeGeneratorServiceMock.generate).toHaveBeenCalledTimes(1);
 
-        expect(passwordCacheMock.save).toHaveBeenCalledWith('1234-abc', "123456", 300);
+        expect(passwordCacheMock.save).toHaveBeenCalledWith("1234-abc", "123456", 300);
         expect(passwordCacheMock.save).toHaveBeenCalledTimes(1);
 
         expect(mailServiceMock.send).toHaveBeenCalledWith(
             input.email,
-            "Seu código de confirmação.", `Seu código de confirmação é 123456.`
+            "Seu código de confirmação.", "Seu código de confirmação é 123456."
         );
         expect(mailServiceMock.send).toHaveBeenCalledTimes(1);
     });

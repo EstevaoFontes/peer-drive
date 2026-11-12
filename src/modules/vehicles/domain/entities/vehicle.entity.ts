@@ -20,11 +20,11 @@ export abstract class Vehicle {
         public isAvailable: boolean = true  
     ) {
         if (!ownerId) {
-            throw new Error('Erro ao cadastrar o carro.');
+            throw new Error("Erro ao cadastrar o carro.");
         }
 
         if (!type) {
-            throw new Error('É obrigatório enviar o tipo do veículo.');
+            throw new Error("É obrigatório enviar o tipo do veículo.");
         }
 
         if (!Object.values(vehicleType).includes(type)) {
@@ -32,27 +32,27 @@ export abstract class Vehicle {
         }
 
         if (!model) {
-            throw new Error('É obrigatório o Modelo.');
+            throw new Error("É obrigatório o Modelo.");
         }
 
         if (!brand) {
-            throw new Error('É obrigatório a Marca.');
+            throw new Error("É obrigatório a Marca.");
         }
 
         if (!dailyRate) {
-            throw new Error('É obrigatório enviar um valor do carro.');
+            throw new Error("É obrigatório enviar um valor do carro.");
         }
 
         if (imageUrl.length < 1) {
-            throw new Error('Tem que enviar pelo menos 1 imagem.');
+            throw new Error("Tem que enviar pelo menos 1 imagem.");
         }
 
         if (imageUrl.length > 4) {
-            throw new Error('Não é permitido mais que 4 imagens.');
+            throw new Error("Não é permitido mais que 4 imagens.");
         }
 
         if (!year) {
-            throw new Error('É obrigatório o ano.');
+            throw new Error("É obrigatório o ano.");
         }
 
     }
@@ -60,31 +60,31 @@ export abstract class Vehicle {
 
     public rent(): void {
         if (!this.isAvailable) {
-            throw new Error("Esse veículo já está alugado.")
+            throw new Error("Esse veículo já está alugado.");
         }
 
-        this.isAvailable = false
+        this.isAvailable = false;
     };
     
 
     public returnVehicle(): void {
         if (this.isAvailable) {
-            throw new Error('Este Veículo já está disponível.')
+            throw new Error("Este Veículo já está disponível.");
         }
 
-        this.isAvailable = true
+        this.isAvailable = true;
     };
 
 
     public calculateCostByTypeUse(typeUse: rentalPurpose): number{
 
-        const getStrategy = this.pricingStrategies[typeUse]
+        const getStrategy = this.pricingStrategies[typeUse];
 
         if(!getStrategy){
             throw new Error("Esse veículo não aceita esse tipo de uso.");
         }
 
-        return getStrategy(this.dailyRate)
+        return getStrategy(this.dailyRate);
 
     };
 

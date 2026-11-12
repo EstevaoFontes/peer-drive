@@ -12,7 +12,7 @@ export class Suv extends Vehicle {
             [rentalPurpose.TOUR]: (base) => base * 1.0,
             [rentalPurpose.TRIPS]: (base) => base * 1.15,
             [rentalPurpose.APP_RIDES]: (base) => base * 1.35
-        }
+        };
     };
 
     constructor(
@@ -35,7 +35,7 @@ export class Suv extends Vehicle {
             dailyRate,
             imageUrl,
             isAvaible ?? true
-        )
+        );
     }
 
 }

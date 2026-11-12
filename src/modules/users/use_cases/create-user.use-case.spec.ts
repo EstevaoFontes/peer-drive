@@ -2,9 +2,8 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from "vitest";
 import { CreateUserUseCase } from "./create-user.use-case.js";
 import { IUserRepository } from "../domain/repositories/user.repository.js";
 import { IHashService } from "../../core/services/password-hash-service.interface.js";
-import { User } from "../domain/entities/user.entity.js";
 
-describe('Test create User Use Case', () => {
+describe("Test create User Use Case", () => {
 
     type IUserRepositoryMock = Mocked<IUserRepository>;
     type IHashServiceMock = Mocked<IHashService>;
@@ -31,22 +30,22 @@ describe('Test create User Use Case', () => {
             update: vi.fn(),
             delete: vi.fn()
 
-        }
+        };
 
         hashServiceMock = {
             compare: vi.fn(),
             hash: vi.fn()
-        }
+        };
 
         crateUserUseCase = new CreateUserUseCase(userRepositoryMock, hashServiceMock);
     });
 
-    it('Should successfully create user.', async () => {
+    it("Should successfully create user.", async () => {
 
-        vi.mocked(userRepositoryMock.existEmail).mockResolvedValue(false)
-        vi.mocked(hashServiceMock.hash).mockResolvedValue("passord-hash")
+        vi.mocked(userRepositoryMock.existEmail).mockResolvedValue(false);
+        vi.mocked(hashServiceMock.hash).mockResolvedValue("passord-hash");
 
-        await crateUserUseCase.execute(input)
+        await crateUserUseCase.execute(input);
 
         expect(userRepositoryMock.existEmail).toHaveBeenCalledWith("john@gmail.com");
         expect(hashServiceMock.hash).toHaveBeenCalledWith("nova-senha");
@@ -55,14 +54,14 @@ describe('Test create User Use Case', () => {
     });
 
 
-    it('Should throw a Error if password is not equal.', async () => {
+    it("Should throw a Error if password is not equal.", async () => {
 
         const differentPasswordInput = {
             ...input,
             password: "senha-diferente"
         };
 
-        await expect(crateUserUseCase.execute(differentPasswordInput)).rejects.toThrow('As senhas não são iguais.');
+        await expect(crateUserUseCase.execute(differentPasswordInput)).rejects.toThrow("As senhas não são iguais.");
 
         expect(userRepositoryMock.existEmail).not.toHaveBeenCalled();
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
@@ -71,9 +70,9 @@ describe('Test create User Use Case', () => {
 
     it("Should throw a error if email alredy exist", async () => {
 
-        vi.mocked(userRepositoryMock.existEmail).mockResolvedValue(true)
+        vi.mocked(userRepositoryMock.existEmail).mockResolvedValue(true);
 
-        await expect(crateUserUseCase.execute(input)).rejects.toThrow('Esse email ja está cadastrado.');
+        await expect(crateUserUseCase.execute(input)).rejects.toThrow("Esse email ja está cadastrado.");
 
         expect(userRepositoryMock.existEmail).toHaveBeenCalledWith("john@gmail.com");
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
@@ -141,7 +140,7 @@ describe('Test create User Use Case', () => {
                 confirmPassword: "nova-senha",
                 expectedError: "O CPF não pode ser vazio."
             },
-        ])('$testCase', async ({ name, email, cpf, password, confirmPassword, expectedError }) => {
+        ])("$testCase", async ({ name, email, cpf, password, confirmPassword, expectedError }) => {
 
             const wrongInput = {
                 name: name,
@@ -149,10 +148,10 @@ describe('Test create User Use Case', () => {
                 cpf: cpf,
                 password: password,
                 confirmPassword: confirmPassword
-            }
+            };
 
-            vi.mocked(userRepositoryMock.existEmail).mockResolvedValue(false)
-            vi.mocked(hashServiceMock.hash).mockResolvedValue(password)
+            vi.mocked(userRepositoryMock.existEmail).mockResolvedValue(false);
+            vi.mocked(hashServiceMock.hash).mockResolvedValue(password);
 
             await expect(crateUserUseCase.execute(wrongInput)).rejects.toThrow(expectedError);
 

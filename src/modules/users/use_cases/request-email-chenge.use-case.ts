@@ -35,17 +35,17 @@ export class RequestEmailChangeUseCase {
         const verifyToken = await this.tokenService.verify(token);
 
         if (!verifyToken) {
-            throw new UnauthorizedException('Token inválido ou expirado.')
+            throw new UnauthorizedException("Token inválido ou expirado.");
         };
 
         if (input.newEmail === verifyToken.email) {
-            throw new BadRequestException("O novo email deve ser diferente do email atual.")
+            throw new BadRequestException("O novo email deve ser diferente do email atual.");
         };
 
         const user = await this.userRepository.existEmail(input.newEmail);
 
         if (user) {
-            throw new ConflictException("Esse email já está em uso por outra conta.")
+            throw new ConflictException("Esse email já está em uso por outra conta.");
         };
 
 

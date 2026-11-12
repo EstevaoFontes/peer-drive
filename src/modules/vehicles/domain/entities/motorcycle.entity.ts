@@ -36,7 +36,7 @@ constructor(
         dailyRate,
         imageUrl,
         isAvaible ?? true
-    )
+    );
 }
 
 }

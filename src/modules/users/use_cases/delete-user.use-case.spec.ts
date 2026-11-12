@@ -3,7 +3,7 @@ import { IUserRepository } from "../domain/repositories/user.repository.js";
 import { DeleteUserUseCase } from "./delte-user.use-case.js";
 import { describe, it, vi, expect, type Mocked, beforeEach } from "vitest";
 
-describe('Teste Delete User', () => {
+describe("Teste Delete User", () => {
     type ITokenServiceMock = Mocked<ITokenService>;
     type IUserRepositoryMock = Mocked<IUserRepository>;
 
@@ -11,7 +11,7 @@ describe('Teste Delete User', () => {
     let userRepositoryMock: IUserRepositoryMock;
     let deleteUserUseCase: DeleteUserUseCase;
 
-    const token = "ebc-def-123"
+    const token = "ebc-def-123";
 
     beforeEach(() => {
         userRepositoryMock = {
@@ -21,14 +21,14 @@ describe('Teste Delete User', () => {
             findById: vi.fn(),
             update: vi.fn(),
             delete: vi.fn(),
-        }
+        };
 
         tokenServiceMock = {
             generate: vi.fn(),
             verify: vi.fn()
-        }
+        };
 
-        deleteUserUseCase = new DeleteUserUseCase(tokenServiceMock, userRepositoryMock)
+        deleteUserUseCase = new DeleteUserUseCase(tokenServiceMock, userRepositoryMock);
     });
 
     it("Should verify token and delete user.", async () => {
@@ -77,6 +77,6 @@ describe('Teste Delete User', () => {
 
         expect(userRepositoryMock.delete).toHaveBeenCalledWith("123-abc");
         expect(userRepositoryMock.delete).toHaveBeenCalledTimes(1);
-    })
+    });
 
 });

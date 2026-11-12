@@ -7,27 +7,27 @@ import { describe, it, vi, expect, beforeEach, type Mocked } from "vitest";
 
 describe("Test Confirm Forgot Password", () => {
 
-    type IPasswordCacheServiceMock = Mocked<IPasswordCacheService>
-    type IHashServiceMock = Mocked<IHashService>
-    type IUserRepositoryMock = Mocked<IUserRepository>
+    type IPasswordCacheServiceMock = Mocked<IPasswordCacheService>;
+    type IHashServiceMock = Mocked<IHashService>;
+    type IUserRepositoryMock = Mocked<IUserRepository>;
 
 
     let passwordCacheServiceMock: IPasswordCacheServiceMock;
     let hashServiceMock: IHashServiceMock;
     let userRepositoryMock: IUserRepositoryMock;
     let confirmForgotPasswordUseCase: ConfirmForgotPasswordUseCase;
-    let user: User
+    let user: User;
 
     const input = {
         code: "123456",
-        email: 'paulo@gmail.com',
+        email: "paulo@gmail.com",
         newPassword: "teste123",
         confirmNewPassword: "teste123"
     };
 
     const createUser = () => User.restore(
-        '1234-abc',
-        'teste@gmail.com',
+        "1234-abc",
+        "teste@gmail.com",
         "John",
         "54587419516",
         "qwerty-a-12345",
@@ -40,12 +40,12 @@ describe("Test Confirm Forgot Password", () => {
         passwordCacheServiceMock = {
             consumeCode: vi.fn(),
             save: vi.fn()
-        }
+        };
 
         hashServiceMock = {
             hash: vi.fn(),
             compare: vi.fn()
-        }
+        };
 
         userRepositoryMock = {
             create: vi.fn(),
@@ -54,38 +54,38 @@ describe("Test Confirm Forgot Password", () => {
             findById: vi.fn(),
             update: vi.fn(),
             delete: vi.fn()
-        }
+        };
 
-        user = createUser()
+        user = createUser();
 
         confirmForgotPasswordUseCase = new ConfirmForgotPasswordUseCase(
             passwordCacheServiceMock,
             hashServiceMock,
             userRepositoryMock
-        )
+        );
     });
 
 
-    it('Should compare password, get user in database, get cache, hash password and save in database.',
+    it("Should compare password, get user in database, get cache, hash password and save in database.",
         async () => {
 
             vi.mocked(userRepositoryMock.findByEmail).mockResolvedValue(user);
 
             vi.mocked(passwordCacheServiceMock.consumeCode).mockResolvedValue(true);
 
-            vi.mocked(hashServiceMock.hash).mockResolvedValue("hashed_password_123")
+            vi.mocked(hashServiceMock.hash).mockResolvedValue("hashed_password_123");
 
             await confirmForgotPasswordUseCase.execute(input);
 
             expect(hashServiceMock.hash).toHaveBeenCalledWith(input.newPassword);
-            expect(user.passwordValue).toBe("hashed_password_123")
+            expect(user.passwordValue).toBe("hashed_password_123");
             expect(userRepositoryMock.update).toHaveBeenCalledWith(user);
             expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
         });
 
 
 
-    it('Should throw error if passwords have less than 6 characters.', async () => {
+    it("Should throw error if passwords have less than 6 characters.", async () => {
 
         const invalidInput = {
             ...input,
@@ -98,12 +98,12 @@ describe("Test Confirm Forgot Password", () => {
         expect(userRepositoryMock.findByEmail).not.toHaveBeenCalled();
         expect(passwordCacheServiceMock.consumeCode).not.toHaveBeenCalled();
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(user.passwordValue).toBe("qwerty-a-12345")
+        expect(user.passwordValue).toBe("qwerty-a-12345");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
 
-    it('Should throw error if passwords is not equal.', async () => {
+    it("Should throw error if passwords is not equal.", async () => {
 
         const invalidInput = {
             ...input,
@@ -116,7 +116,7 @@ describe("Test Confirm Forgot Password", () => {
         expect(userRepositoryMock.findByEmail).not.toHaveBeenCalled();
         expect(passwordCacheServiceMock.consumeCode).not.toHaveBeenCalled();
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(user.passwordValue).toBe("qwerty-a-12345")
+        expect(user.passwordValue).toBe("qwerty-a-12345");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
@@ -129,7 +129,7 @@ describe("Test Confirm Forgot Password", () => {
         expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(input.email);
         expect(passwordCacheServiceMock.consumeCode).not.toHaveBeenCalled();
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(user.passwordValue).toBe("qwerty-a-12345")
+        expect(user.passwordValue).toBe("qwerty-a-12345");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
@@ -145,7 +145,7 @@ describe("Test Confirm Forgot Password", () => {
         expect(passwordCacheServiceMock.consumeCode).toHaveBeenCalledWith(user.id.value, input.code);
 
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(user.passwordValue).toBe("qwerty-a-12345")
+        expect(user.passwordValue).toBe("qwerty-a-12345");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
@@ -155,7 +155,7 @@ describe("Test Confirm Forgot Password", () => {
 
         vi.mocked(passwordCacheServiceMock.consumeCode).mockResolvedValue(true);
 
-        vi.mocked(hashServiceMock.hash).mockResolvedValue('');
+        vi.mocked(hashServiceMock.hash).mockResolvedValue("");
 
         await expect(confirmForgotPasswordUseCase.execute(input)).rejects.toThrow("O hash da senha não pode ser vazio.");
 
@@ -163,7 +163,7 @@ describe("Test Confirm Forgot Password", () => {
         expect(passwordCacheServiceMock.consumeCode).toHaveBeenCalledWith(user.id.value, input.code);
         expect(hashServiceMock.hash).toHaveBeenCalledWith(input.newPassword);
 
-        expect(user.passwordValue).toBe("qwerty-a-12345")
+        expect(user.passwordValue).toBe("qwerty-a-12345");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 });
