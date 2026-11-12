@@ -17,7 +17,7 @@ export abstract class Vehicle {
         public year: string,
         public dailyRate: number,
         public imageUrl: string[],
-        public isAvailable: boolean = true
+        public isAvailable: boolean = true  
     ) {
         if (!ownerId) {
             throw new Error('Erro ao cadastrar o carro.');
