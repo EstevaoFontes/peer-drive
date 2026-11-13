@@ -18,7 +18,16 @@ describe("Test Change Name User Use Case", () => {
         name: "Luke"
     };
 
-    const createUser = () => User.restore("1234", "teste@gmail.com", "John", "54587419516", "123456-abc", new Date, new Date);
+    const createUser = () => User.restore({
+        id: "1234",
+        email: "teste@gmail.com",
+        name: "John",
+        cpf: "54587419516",
+        isContractAccepted: true,
+        password: "123456-abc",
+        createdAt: new Date(),
+        updatedAt: new Date()
+    });
 
     beforeEach(() => {
         userRepositoryMock = {

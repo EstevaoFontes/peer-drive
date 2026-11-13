@@ -2,6 +2,25 @@ import { Cpf } from "../value-objects/cpf-validate.value-objects.js";
 import { Email } from "../value-objects/email-validate.value-objects.js";
 import { UserId } from "../value-objects/id-create.value-objects.js";
 
+interface ICreateUser {
+    email: string;
+    name: string;
+    cpf: string;
+    password: string;
+    isContractAccepted: boolean;
+}
+
+export interface IRestoreUser {
+    id: string;
+    email: string;
+    name: string;
+    cpf: string;
+    password: string;
+    isContractAccepted: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 export class User {
     constructor(
         public readonly id: UserId,
@@ -9,6 +28,7 @@ export class User {
         public name: string,
         public readonly cpf: Cpf,
         private password: string,
+        private isContractAccepted: boolean,
         public readonly createdAt: Date,
         public updatedAt: Date
     ) { };
@@ -57,26 +77,31 @@ export class User {
     }
 
 
-    static create(email: string, name: string, cpf: string, password: string): User {
+    static create(input: ICreateUser): User {
 
-        if (!name || name.trim().length < 3) {
+        if (!input.name || input.name.trim().length < 3) {
             throw new Error("O nome não pode ter menos de 3 caracteres.");
         }
 
-         if (!password.trim()) {
+        if (!input.password.trim()) {
             throw new Error("A senha está mal formatada.");
         };
 
-        const newEmail = new Email(email);
-        const newCpf = new Cpf(cpf);
+        if (!input.isContractAccepted) {
+            throw new Error("O contrato deve ser aceito");
+        };
+
+        const newEmail = new Email(input.email);
+        const newCpf = new Cpf(input.cpf);
         const dateNow = new Date();
 
         const newUser = new User(
             new UserId(),
             newEmail,
-            name,
+            input.name,
             newCpf,
-            password,
+            input.password,
+            true,
             dateNow,
             dateNow
         );
@@ -84,24 +109,17 @@ export class User {
         return newUser;
     };
 
-    static restore(
-        id: string,
-        email: string,
-        name: string,
-        cpf: string,
-        password: string,
-        createdAt: Date,
-        updatedAt: Date
-    ): User {
+    static restore(input: IRestoreUser): User {
 
         return new User(
-            new UserId(id),
-            new Email(email),
-            name,
-            new Cpf(cpf),
-            password,
-            createdAt,
-            updatedAt
+            new UserId(input.id),
+            new Email(input.email),
+            input.name,
+            new Cpf(input.cpf),
+            input.password,
+            true,
+            input.createdAt,
+            input.updatedAt
         );
     };
 };

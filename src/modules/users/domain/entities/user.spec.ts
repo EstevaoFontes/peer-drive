@@ -6,19 +6,21 @@ import { Cpf } from "../value-objects/cpf-validate.value-objects.js";
 
 describe("User entity", () => {
 
-    const newUser = {
-        email: "paulo@gmail.com",
-        name: "Paulo",
-        cpf: "055.629.545-59",
+    const input = {
+        email: "john@gmail.com",
+        name: "John",
+        cpf: "99101085425",
         password: "teste2",
+        isContractAccepted: true
     };
 
     const userDatabase = {
         id: "123456aabc",
-        email: "paulo@gmail.com",
-        name: "Paulo",
-        cpf: "055.629.545-59",
+        email: "john@gmail.com",
+        name: "John",
+        cpf: "99101085425",
         password: "123-abc-456",
+        isContractAccepted: true,
         createdAt: new Date(),
         updatedAt: new Date()
     };
@@ -27,7 +29,13 @@ describe("User entity", () => {
 
         it("should create a valid user instance with auto-generated id and timestamps", () => {
 
-            const user = User.create(newUser.email, newUser.name, newUser.cpf, newUser.password);
+            const user = User.create({
+                email: input.email,
+                name: input.name,
+                cpf: input.cpf,
+                isContractAccepted: input.isContractAccepted,
+                password: input.password
+            });
 
             expect(user).toBeInstanceOf(User);
 
@@ -37,11 +45,11 @@ describe("User entity", () => {
             expect(user.id.value.length).toBeGreaterThan(0);
 
             expect(user.email).toBeInstanceOf(Email);
-            expect(user.email.value).toBe("paulo@gmail.com");
+            expect(user.email.value).toBe("john@gmail.com");
 
             expect(user.cpf).toBeInstanceOf(Cpf);
-            expect(user.cpf.value).toBe("05562954559");
-            expect(user.cpf.cpfFormatted()).toBe("055.629.545-59");
+            expect(user.cpf.value).toBe("99101085425");
+            expect(user.cpf.cpfFormatted()).toBe("991.010.854-25");
 
             expect(user.createdAt).toBeInstanceOf(Date);
             expect(user.updatedAt).toBeInstanceOf(Date);
@@ -55,15 +63,16 @@ describe("User entity", () => {
     describe("Restore user.", () => {
         it("should be restore a user from database", () => {
 
-            const restoreUser = User.restore(
-                    userDatabase.id,
-                    userDatabase.email,
-                    userDatabase.name,
-                    userDatabase.cpf,
-                    userDatabase.password,
-                    userDatabase.createdAt,
-                    userDatabase.updatedAt
-                );
+            const restoreUser = User.restore({
+                id: userDatabase.id,
+                email: userDatabase.email,
+                name: userDatabase.name,
+                cpf: userDatabase.cpf,
+                password: userDatabase.password,
+                isContractAccepted: userDatabase.isContractAccepted,
+                createdAt: userDatabase.createdAt,
+                updatedAt: userDatabase.updatedAt
+            });
 
             expect(restoreUser).toBeInstanceOf(User);
             expect(restoreUser.id).toBeInstanceOf(UserId);
@@ -71,11 +80,11 @@ describe("User entity", () => {
             expect(restoreUser.id.value.length).toBeGreaterThan(0);
 
             expect(restoreUser.email).toBeInstanceOf(Email);
-            expect(restoreUser.email.value).toBe("paulo@gmail.com");
+            expect(restoreUser.email.value).toBe("john@gmail.com");
 
             expect(restoreUser.cpf).toBeInstanceOf(Cpf);
-            expect(restoreUser.cpf.value).toBe("05562954559");
-            expect(restoreUser.cpf.cpfFormatted()).toBe("055.629.545-59");
+            expect(restoreUser.cpf.value).toBe("99101085425");
+            expect(restoreUser.cpf.cpfFormatted()).toBe("991.010.854-25");
 
 
 
@@ -87,13 +96,19 @@ describe("User entity", () => {
 
         it("should change Email", () => {
 
-            const user = User.create("paulo@gmail.com", "paulo", "05562954559", "1234567");
+            const user = User.create({
+                email: "john@gmail.com",
+                name: "John",
+                cpf: "99101085425",
+                isContractAccepted: true,
+                password: "1234567"
+            });
 
             const oldUpdatedAt = user.updatedAt;
 
-            user.changeEmail("estevao@gmail.com");
+            user.changeEmail("luke@gmail.com");
 
-            expect(user.email.value).toBe("estevao@gmail.com");
+            expect(user.email.value).toBe("luke@gmail.com");
 
             expect(user.updatedAt.getTime()).toBeGreaterThanOrEqual(oldUpdatedAt.getTime());
 
@@ -103,28 +118,34 @@ describe("User entity", () => {
 
             {
                 testCase: "Should throw error if no input new email",
-                oldEmail: "paulo@gmail.com",
+                oldEmail: "john@gmail.com",
                 newEmail: "",
                 expectedError: "O email deve ser passado."
             },
 
             {
                 testCase: "Should throw error if new email is equal a old email",
-                oldEmail: "paulo@gmail.com",
-                newEmail: "paulo@gmail.com",
+                oldEmail: "john@gmail.com",
+                newEmail: "john@gmail.com",
                 expectedError: "O novo email deve ser diferente do atual."
             },
 
             {
                 testCase: "Should throw error if new email format is invalid",
-                oldEmail: "paulo@gmail.com",
+                oldEmail: "john@gmail.com",
                 newEmail: "INVALID-EMAIL",
                 expectedError: "Formato de e-mail invalido."
             },
 
         ])("$testCase", ({ oldEmail, newEmail, expectedError }) => {
 
-            const user = User.create(oldEmail, "paulo", "05562954559", "1234567");
+            const user = User.create({
+                email: oldEmail,
+                name: "John",
+                cpf: "99101085425",
+                isContractAccepted: true,
+                password: "1234567"
+            });
 
 
             expect(() => {
@@ -139,7 +160,13 @@ describe("User entity", () => {
 
         it("should change password", () => {
 
-            const user = User.create("paulo@gmail.com", "paulo", "05562954559", "1234567");
+            const user = User.create({
+                email: "john@gmail.com",
+                name: "John",
+                cpf: "99101085425",
+                isContractAccepted: true,
+                password: "1234567"
+            });
 
             const oldUpdatedAt = user.updatedAt;
 
@@ -153,7 +180,13 @@ describe("User entity", () => {
 
         it("Should throw error if no input hash password", () => {
 
-            const user = User.create("paulo@gmail.com", "paulo", "05562954559", "old-password");
+            const user = User.create({
+                email: "john@gmail.com",
+                name: "John",
+                cpf: "99101085425",
+                isContractAccepted: true,
+                password: "old-password"
+            });
 
             const newPassword = "";
 
@@ -168,7 +201,13 @@ describe("User entity", () => {
 describe("Change name", () => {
     it("should change name", () => {
 
-        const user = User.create("paulo@gmail.com", "paulo", "05562954559", "1234567");
+        const user = User.create({
+            email: "john@gmail.com",
+            name: "John",
+            cpf: "99101085425",
+            isContractAccepted: true,
+            password: "1234567"
+        });
 
         const oldUpdatedAt = user.updatedAt;
 
@@ -199,7 +238,13 @@ describe("Change name", () => {
 
     ])("$testCase", ({ oldName, newName, expectedError }) => {
 
-        const user = User.create("paulo@gmail.com", oldName, "05562954559", "123456");
+        const user = User.create({
+            email: "john@gmail.com",
+            name: oldName,
+            cpf: "99101085425",
+            isContractAccepted: true,
+            password: "1234567"
+        });
 
 
         expect(() => {
@@ -216,64 +261,80 @@ describe("Should throw errors in creation.", () => {
     it.each([
         {
             testCase: "Should throw a Error when a name less then 3 characters.",
-            email: "pauloFontes@gmail.com",
-            name: "Es",
-            cpf: "055.629.545.59",
+            email: "john@gmail.com",
+            name: "Jo",
+            cpf: "99101085425",
+            isContractAccepted: true,
             password: "teste123",
             expectedError: "O nome não pode ter menos de 3 caracteres."
         },
         {
             testCase: "Should throw a Error when a name is empty.",
-            email: "pauloFontes@gmail.com",
+            email: "john@gmail.com",
             name: "",
-            cpf: "055.629.545.59",
+            cpf: "99101085425",
+            isContractAccepted: true,
             password: "teste123",
             expectedError: "O nome não pode ter menos de 3 caracteres."
         },
         {
             testCase: "Should throw a Error when an email it's bad formatted.",
-            email: "pauloFontesgmail.com",
-            name: "Estêvao Fontes",
-            cpf: "055.629.545.59",
+            email: "johngmail.com",
+            name: "John",
+            cpf: "99101085425",
+            isContractAccepted: true,
             password: "teste123",
             expectedError: "Formato de e-mail invalido."
         },
         {
             testCase: "Should throw a Error when an email is empty.",
             email: "",
-            name: "Estêvao Fontes",
-            cpf: "055.629.545.59",
+            name: "John",
+            cpf: "99101085425",
+            isContractAccepted: true,
             password: "teste123",
             expectedError: "O e-mail não pode ser vazio."
         },
         {
             testCase: "Should throw a Error when an cpf it's bad formatted.",
-            email: "pauloFontes@gmail.com",
-            name: "Estêvao Fontes",
+            email: "john@gmail.com",
+            name: "John",
             cpf: "000.000.000.00",
+            isContractAccepted: true,
             password: "teste123",
             expectedError: "CPF invalido."
         },
         {
             testCase: "Should throw a Error when an cpf is empty.",
-            email: "pauloFontes@gmail.com",
-            name: "Estêvao Fontes",
+            email: "john@gmail.com",
+            name: "John",
             cpf: "",
+            isContractAccepted: true,
             password: "teste123",
             expectedError: "O CPF não pode ser vazio."
         },
         {
             testCase: "Should throw a Error when an password is empty.",
-            email: "pauloFontes@gmail.com",
-            name: "Estêvao Fontes",
-            cpf: "055.629.545.59",
+            email: "john@gmail.com",
+            name: "John",
+            cpf: "99101085425",
+            isContractAccepted: true,
             password: "",
             expectedError: "A senha está mal formatada."
         },
-    ])("$testCase", ({ email, name, cpf, password, expectedError }) => {
+        {
+            testCase: "Should throw a Error when contract is not accepted.",
+            email: "john@gmail.com",
+            name: "John",
+            cpf: "99101085425",
+            isContractAccepted: false,
+            password: "teste123",
+            expectedError: "O contrato deve ser aceito"
+        },
+    ])("$testCase", ({ email, name, cpf, isContractAccepted, password, expectedError }) => {
 
         expect(() => {
-            User.create(email, name, cpf, password);
+            User.create({ email: email, name: name, cpf: cpf, isContractAccepted: isContractAccepted, password: password });
         }).toThrow(expectedError);
 
     });

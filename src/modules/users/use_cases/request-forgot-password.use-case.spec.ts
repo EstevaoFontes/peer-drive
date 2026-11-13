@@ -24,7 +24,16 @@ describe("Test Request Forgot password.", () => {
         email: "john@gmail.com"
     };
 
-    const createUser = () => User.restore("1234-abc", "john@gmail.com", "John", "54587419516", "qwerty-a-12345", new Date(), new Date());
+    const createUser = () => User.restore({
+        id: "1234-abc",
+        email: "john@gmail.com",
+        name: "John",
+        cpf: "54587419516",
+        isContractAccepted: true,
+        password: "qwerty-a-12345",
+        createdAt: new Date(),
+        updatedAt: new Date()
+    });
 
     beforeEach(() => {
         codeGeneratorServiceMock = {
@@ -72,7 +81,7 @@ describe("Test Request Forgot password.", () => {
 
         expect(codeGeneratorServiceMock.generate).toHaveBeenCalledTimes(1);
 
-        expect(passwordCacheMock.save).toHaveBeenCalledWith("1234-abc", "123456", 300);
+        expect(passwordCacheMock.save).toHaveBeenCalledWith("123456", input.email, 300);
         expect(passwordCacheMock.save).toHaveBeenCalledTimes(1);
 
         expect(mailServiceMock.send).toHaveBeenCalledWith(

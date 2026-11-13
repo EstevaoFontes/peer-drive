@@ -3,10 +3,11 @@ import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../domain/repositor
 import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../core/services/token-service.interface.js";
 import { Injectable, Inject, BadRequestException, InternalServerErrorException } from "@nestjs/common";
 
-interface IUserLoginDTO {
+interface UserLoginDTO {
     email: string
     password: string
-};
+}
+
 
 @Injectable()
 export class LoginUserUserCase {
@@ -22,7 +23,7 @@ export class LoginUserUserCase {
         private readonly tokenService: ITokenService
     ) { }
 
-    async execute(input: IUserLoginDTO): Promise<{ accessToken: string }> {
+    async execute(input: UserLoginDTO): Promise<{ accessToken: string }> {
 
         const user = await this.userRepository.findByEmail(input.email);
 
@@ -41,7 +42,7 @@ export class LoginUserUserCase {
             email: user.email.value
         });
 
-        if(!accessToken){
+        if (!accessToken) {
             throw new InternalServerErrorException("Houve um erro ao te autenticar, por favor tente novamente mais tarde.");
         }
 

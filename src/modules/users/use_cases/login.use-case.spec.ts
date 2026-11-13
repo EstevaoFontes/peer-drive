@@ -18,15 +18,16 @@ describe("Test Login User Use Case", () => {
     let loginUserUseCase: LoginUserUserCase;
     let user: User;
 
-    const recreateUser = () => User.restore(
-        "123456aabc",
-        "john@gmail.com",
-        "John",
-        "54587419516",
-        "123-abc-456",
-        new Date(),
-        new Date()
-    );
+    const recreateUser = () => User.restore({
+        id: "123456aabc",
+        email: "john@gmail.com",
+        name: "John",
+        cpf: "54587419516",
+        isContractAccepted: true,
+        password: "123-abc-456",
+        createdAt: new Date(),
+        updatedAt: new Date()
+    });
 
     const input = {
         email: "john@gmail.com",
