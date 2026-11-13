@@ -1,17 +1,22 @@
-// import { IHashService } from "../../services/password-hash-service.interface.js";
-// import { Injectable } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
+import { IHashService } from "../../services/password-hash-service.interface.js";
+import * as bcrypt from "bcrypt";
 
 
-// @Injectable()
-// export class bycriptHashService implements IHashService{
-    
-//     hash(password: string): Promise<string> {
-        
-//     }
+@Injectable()
+export class BcryptHashService implements IHashService {
+
+    async hash(password: string): Promise<string> {
+
+        const hash = await bcrypt.hash(password, 10);
+
+        return hash;
+    }
 
 
-//     compare(password: string, hashed: string): Promise<boolean> {
-        
-//     }
-    
-// }
+    async compare(password: string, hashed: string): Promise<boolean> {
+
+        return await bcrypt.compare(password, hashed);
+    }
+
+}
