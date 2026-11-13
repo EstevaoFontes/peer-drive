@@ -23,7 +23,16 @@ describe("Test change password.", () => {
         confirmNewPassword: "nova-senha-123"
     };
 
-    const recreateUser = () => User.restore("123-abc", "teste@gmail.com", "John", "54587419516", "teste-123-hash", new Date(), new Date());
+    const recreateUser = () => User.restore({
+        id: "123-abc",
+        email: "teste@gmail.com",
+        name: "John",
+        cpf: "54587419516",
+        isContractAccepted: true,
+        password: "teste-123-hash",
+        createdAt: new Date(),
+        updatedAt: new Date()
+    });
 
     beforeEach(() => {
         hashServiceMock = {

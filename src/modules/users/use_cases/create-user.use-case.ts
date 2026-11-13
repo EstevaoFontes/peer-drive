@@ -3,12 +3,16 @@ import { USER_REPOSITORY_TOKEN, type IUserRepository } from "../domain/repositor
 import { type IHashService, HASH_SERVICE_TOKEN } from "../../core/services/password-hash-service.interface.js";
 import { User } from "../domain/entities/user.entity.js";
 
-export interface CreateUserDTO {
-    name: string;
-    email: string;
-    cpf: string;
-    password: string;
-    confirmPassword: string;
+
+
+interface CreateUserDTO {
+    name: string
+    email: string
+    cpf: string
+    password: string
+    confirmPassword: string
+    isContractAccepted: boolean
+
 }
 
 @Injectable()
@@ -23,10 +27,6 @@ export class CreateUserUseCase {
 
     async execute(input: CreateUserDTO): Promise<void> {
 
-        if (input.password.trim() !== input.confirmPassword.trim()) {
-            throw new BadRequestException("As senhas não são iguais.");
-        }
-
         const isExistEmail = await this.userRepository.existEmail(input.email);
 
         if (isExistEmail) {
@@ -35,7 +35,13 @@ export class CreateUserUseCase {
 
         const hashPassword = await this.hashService.hash(input.password);
 
-        const user = User.create(input.email, input.name, input.cpf, hashPassword);
+        const user = User.create({
+            cpf: input.cpf,
+            email: input.email,
+            isContractAccepted: input.isContractAccepted,
+            name: input.name,
+            password: hashPassword
+        });
 
         await this.userRepository.create(user);
 

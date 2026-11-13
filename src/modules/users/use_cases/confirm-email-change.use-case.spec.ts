@@ -2,7 +2,7 @@ import { ITokenService } from "../../core/services/token-service.interface.js";
 import { IUserRepository } from "../domain/repositories/user.repository.js";
 import { IMailChangeCacheService } from "../../core/services/mail-change-cache-service.interface.js";
 import { describe, expect, it, beforeEach, vi, type Mocked } from "vitest";
-import { ConfirmEmailChengeUseCase } from "./confirm-email-chenge.use-case.js";
+import { ConfirmEmailChengeUseCase } from "./confirm-email-change.use-case.js";
 import { User } from "../domain/entities/user.entity.js";
 
 describe("Confirm Email Change Use Case.", () => {
@@ -21,15 +21,16 @@ describe("Confirm Email Change Use Case.", () => {
         code: "12345"
     };
 
-    const recreateUser = () => User.restore(
-        "abc-123-def",
-        "teste@gmail.com",
-        "Josh",
-        "54587419516",
-        "123-abc-456",
-        new Date(),
-        new Date()
-    );
+    const recreateUser = () => User.restore({
+        id: "abc-123-def",
+        email: "teste@gmail.com",
+        name: "Josh",
+        cpf: "54587419516",
+        isContractAccepted: true,
+        password: "123-abc-456",
+        createdAt: new Date(),
+        updatedAt: new Date()
+    });
 
     beforeEach(() => {
         tokenServiceMock = {
@@ -63,7 +64,7 @@ describe("Confirm Email Change Use Case.", () => {
             email: "teste@gmail.com"
         });
 
-        vi.mocked(mailChangeCacheMock.consumeCode).mockResolvedValue({ newEmail: "new_email@gmail.com"});
+        vi.mocked(mailChangeCacheMock.consumeCode).mockResolvedValue({ newEmail: "new_email@gmail.com" });
 
         vi.mocked(userRepositoryMock.findById).mockResolvedValue(user);
 
@@ -104,7 +105,7 @@ describe("Confirm Email Change Use Case.", () => {
         expect(userRepositoryMock.findById).not.toHaveBeenCalled();
         expect(user.email.value).toBe("teste@gmail.com");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
-    }); 
+    });
 
 
     it("Should throw error if user is null", async () => {
@@ -114,7 +115,7 @@ describe("Confirm Email Change Use Case.", () => {
             email: "teste@gmail.com"
         });
 
-        vi.mocked(mailChangeCacheMock.consumeCode).mockResolvedValue({ newEmail: "new_email@gmail.com"});
+        vi.mocked(mailChangeCacheMock.consumeCode).mockResolvedValue({ newEmail: "new_email@gmail.com" });
 
         vi.mocked(userRepositoryMock.findById).mockResolvedValue(null);
 
@@ -133,7 +134,7 @@ describe("Confirm Email Change Use Case.", () => {
             email: "teste@gmail.com"
         });
 
-        vi.mocked(mailChangeCacheMock.consumeCode).mockResolvedValue({ newEmail: "new_email@gmail.com"});
+        vi.mocked(mailChangeCacheMock.consumeCode).mockResolvedValue({ newEmail: "new_email@gmail.com" });
 
         vi.mocked(userRepositoryMock.findById).mockResolvedValue(user);
 
@@ -150,7 +151,7 @@ describe("Confirm Email Change Use Case.", () => {
             email: "teste@gmail.com"
         });
 
-        vi.mocked(mailChangeCacheMock.consumeCode).mockResolvedValue({ newEmail: ""});
+        vi.mocked(mailChangeCacheMock.consumeCode).mockResolvedValue({ newEmail: "" });
 
         vi.mocked(userRepositoryMock.findById).mockResolvedValue(user);
 
@@ -167,11 +168,11 @@ describe("Confirm Email Change Use Case.", () => {
             email: "teste@gmail.com"
         });
 
-        vi.mocked(mailChangeCacheMock.consumeCode).mockResolvedValue({ newEmail: "teste@gmail.com"});
+        vi.mocked(mailChangeCacheMock.consumeCode).mockResolvedValue({ newEmail: "teste@gmail.com" });
 
         vi.mocked(userRepositoryMock.findById).mockResolvedValue(user);
 
-        await expect(confirmEmailChangeUseCase.execute("abc-123", input)).rejects.toThrow(( "O novo email deve ser diferente do atual."));
+        await expect(confirmEmailChangeUseCase.execute("abc-123", input)).rejects.toThrow(("O novo email deve ser diferente do atual."));
 
         expect(user.email.value).toBe("teste@gmail.com");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();

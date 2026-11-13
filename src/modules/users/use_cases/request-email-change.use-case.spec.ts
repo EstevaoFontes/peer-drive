@@ -3,7 +3,7 @@ import { IUserRepository } from "../domain/repositories/user.repository.js";
 import { ICodeGeneratorService } from "../../core/services/generate-code-service.interface.js";
 import { IMailChangeCacheService } from "../../core/services/mail-change-cache-service.interface.js";
 import { IMailService } from "../../core/services/mail-service.interface.js";
-import { RequestEmailChangeUseCase } from "./request-email-chenge.use-case.js";
+import { RequestEmailChangeUseCase } from "./request-email-change.use-case.js";
 import { describe, expect, it, beforeEach, vi, type Mocked } from "vitest";
 
 describe("Test request mail change use case.", () => {

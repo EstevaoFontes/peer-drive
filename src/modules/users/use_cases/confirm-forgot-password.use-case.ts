@@ -3,9 +3,8 @@ import { type IHashService, HASH_SERVICE_TOKEN } from "../../core/services/passw
 import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../domain/repositories/user.repository.js";
 import { Injectable, Inject, BadRequestException, NotFoundException } from "@nestjs/common";
 
-interface IPasswordConfirmDTO {
+interface ConfirmForgotPasswordDTO {
     code: string
-    email: string
     newPassword: string
     confirmNewPassword: string
 };
@@ -23,9 +22,9 @@ export class ConfirmForgotPasswordUseCase {
         private readonly userRepository: IUserRepository,
     ) { };
 
-    async execute(input: IPasswordConfirmDTO): Promise<void> {
+    async execute(input: ConfirmForgotPasswordDTO): Promise<void> {
 
-        if (input.newPassword.trim().length < 6) {
+        if (input.newPassword.length < 6) {
             throw new BadRequestException("A senha não pode ser menor que 6 caracteres.");
         };
 
@@ -33,17 +32,16 @@ export class ConfirmForgotPasswordUseCase {
             throw new BadRequestException("As senhas devem ser iguais.");
         }
 
-        const user = await this.userRepository.findByEmail(input.email);
-
-        if (!user) {
-            throw new NotFoundException("Código inválido ou expirado.");
-        };
-
-        const pending = await this.passwordCacheService.consumeCode(user.id.value, input.code);
+        const pending = await this.passwordCacheService.consumeCode(input.code);
 
         if (!pending) {
             throw new NotFoundException("Código inválido ou expirado.");
         }
+        const user = await this.userRepository.findByEmail(pending.email);
+
+        if (!user) {
+            throw new NotFoundException("Código inválido ou expirado.");
+        };
 
         const hashPassword = await this.hashService.hash(input.newPassword);
 

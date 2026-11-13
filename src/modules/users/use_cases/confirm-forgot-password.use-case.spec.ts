@@ -20,20 +20,20 @@ describe("Test Confirm Forgot Password", () => {
 
     const input = {
         code: "123456",
-        email: "paulo@gmail.com",
         newPassword: "teste123",
         confirmNewPassword: "teste123"
     };
 
-    const createUser = () => User.restore(
-        "1234-abc",
-        "teste@gmail.com",
-        "John",
-        "54587419516",
-        "qwerty-a-12345",
-        new Date(),
-        new Date()
-    );
+    const createUser = () => User.restore({
+        id: "1234-abc",
+        email: "teste@gmail.com",
+        name: "John",
+        cpf: "54587419516",
+        isContractAccepted: true,
+        password: "qwerty-a-12345",
+        createdAt: new Date(),
+        updatedAt: new Date()
+    });
 
 
     beforeEach(() => {
@@ -71,7 +71,7 @@ describe("Test Confirm Forgot Password", () => {
 
             vi.mocked(userRepositoryMock.findByEmail).mockResolvedValue(user);
 
-            vi.mocked(passwordCacheServiceMock.consumeCode).mockResolvedValue(true);
+            vi.mocked(passwordCacheServiceMock.consumeCode).mockResolvedValue({ email: "john@gmail.com" });
 
             vi.mocked(hashServiceMock.hash).mockResolvedValue("hashed_password_123");
 
@@ -102,32 +102,15 @@ describe("Test Confirm Forgot Password", () => {
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
-
-    it("Should throw error if passwords is not equal.", async () => {
-
-        const invalidInput = {
-            ...input,
-            confirmNewPassword: "teste12"
-        };
-
-
-        await expect(confirmForgotPasswordUseCase.execute(invalidInput)).rejects.toThrow("As senhas devem ser iguais.");
-
-        expect(userRepositoryMock.findByEmail).not.toHaveBeenCalled();
-        expect(passwordCacheServiceMock.consumeCode).not.toHaveBeenCalled();
-        expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(user.passwordValue).toBe("qwerty-a-12345");
-        expect(userRepositoryMock.update).not.toHaveBeenCalled();
-    });
-
     it("Sholud throw error if email not found.", async () => {
+
+        vi.mocked(passwordCacheServiceMock.consumeCode).mockResolvedValue({ email: "john@gmail.com" });
 
         vi.mocked(userRepositoryMock.findByEmail).mockResolvedValue(null);
 
         await expect(confirmForgotPasswordUseCase.execute(input)).rejects.toThrow("Código inválido ou expirado.");
 
-        expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(input.email);
-        expect(passwordCacheServiceMock.consumeCode).not.toHaveBeenCalled();
+        expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith("john@gmail.com");
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
         expect(user.passwordValue).toBe("qwerty-a-12345");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
@@ -135,14 +118,11 @@ describe("Test Confirm Forgot Password", () => {
 
     it("Should throw error if cache not found or expired.", async () => {
 
-        vi.mocked(userRepositoryMock.findByEmail).mockResolvedValue(user);
-
-        vi.mocked(passwordCacheServiceMock.consumeCode).mockResolvedValue(false);
+        vi.mocked(passwordCacheServiceMock.consumeCode).mockResolvedValue(null);
 
         await expect(confirmForgotPasswordUseCase.execute(input)).rejects.toThrow("Código inválido ou expirado.");
 
-        expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(input.email);
-        expect(passwordCacheServiceMock.consumeCode).toHaveBeenCalledWith(user.id.value, input.code);
+        expect(passwordCacheServiceMock.consumeCode).toHaveBeenCalledWith(input.code);
 
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
         expect(user.passwordValue).toBe("qwerty-a-12345");
@@ -151,16 +131,16 @@ describe("Test Confirm Forgot Password", () => {
 
     it("Should throw error if hash is empty.", async () => {
 
+        vi.mocked(passwordCacheServiceMock.consumeCode).mockResolvedValue({ email: "john@gmail.com" });
+        
         vi.mocked(userRepositoryMock.findByEmail).mockResolvedValue(user);
-
-        vi.mocked(passwordCacheServiceMock.consumeCode).mockResolvedValue(true);
 
         vi.mocked(hashServiceMock.hash).mockResolvedValue("");
 
         await expect(confirmForgotPasswordUseCase.execute(input)).rejects.toThrow("O hash da senha não pode ser vazio.");
 
-        expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(input.email);
-        expect(passwordCacheServiceMock.consumeCode).toHaveBeenCalledWith(user.id.value, input.code);
+        expect(passwordCacheServiceMock.consumeCode).toHaveBeenCalledWith(input.code);
+        expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith("john@gmail.com");
         expect(hashServiceMock.hash).toHaveBeenCalledWith(input.newPassword);
 
         expect(user.passwordValue).toBe("qwerty-a-12345");

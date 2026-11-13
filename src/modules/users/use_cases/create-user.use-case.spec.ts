@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from "vitest";
 import { CreateUserUseCase } from "./create-user.use-case.js";
 import { IUserRepository } from "../domain/repositories/user.repository.js";
 import { IHashService } from "../../core/services/password-hash-service.interface.js";
+import { type CreateUserDTO } from "./dtos/create-user.dto.js";
 
 describe("Test create User Use Case", () => {
 
@@ -12,10 +13,11 @@ describe("Test create User Use Case", () => {
     let hashServiceMock: IHashServiceMock;
     let crateUserUseCase: CreateUserUseCase;
 
-    const input = {
+    const input: CreateUserDTO = {
         name: "John Doe",
         email: "john@gmail.com",
         cpf: "54587419516",
+        isContractAccepted: true,
         password: "nova-senha",
         confirmPassword: "nova-senha",
     };
@@ -54,20 +56,6 @@ describe("Test create User Use Case", () => {
     });
 
 
-    it("Should throw a Error if password is not equal.", async () => {
-
-        const differentPasswordInput = {
-            ...input,
-            password: "senha-diferente"
-        };
-
-        await expect(crateUserUseCase.execute(differentPasswordInput)).rejects.toThrow("As senhas não são iguais.");
-
-        expect(userRepositoryMock.existEmail).not.toHaveBeenCalled();
-        expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(userRepositoryMock.create).not.toHaveBeenCalled();
-    });
-
     it("Should throw a error if email alredy exist", async () => {
 
         vi.mocked(userRepositoryMock.existEmail).mockResolvedValue(true);
@@ -92,7 +80,7 @@ describe("Test create User Use Case", () => {
                 expectedError: "O nome não pode ter menos de 3 caracteres."
             },
             {
-                testCase: "Should throw error if password is wrong.",
+                testCase: "Should throw error if password is empty.",
                 name: "John",
                 email: "john@gmail.com",
                 cpf: "54587419516",
@@ -142,10 +130,11 @@ describe("Test create User Use Case", () => {
             },
         ])("$testCase", async ({ name, email, cpf, password, confirmPassword, expectedError }) => {
 
-            const wrongInput = {
+            const wrongInput: CreateUserDTO = {
                 name: name,
                 email: email,
                 cpf: cpf,
+                isContractAccepted: true,
                 password: password,
                 confirmPassword: confirmPassword
             };
@@ -158,10 +147,6 @@ describe("Test create User Use Case", () => {
             expect(userRepositoryMock.existEmail).toHaveBeenCalledWith(email);
             expect(hashServiceMock.hash).toHaveBeenCalledWith(password);
 
-
-            // expect(() => {
-            //     crateUserUseCase.execute(wrongInput)
-            // }).to.Throw(expectedError)
         });
     });
 });
