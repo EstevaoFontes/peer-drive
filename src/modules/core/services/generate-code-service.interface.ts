@@ -1,5 +1,5 @@
 export interface ICodeGeneratorService {
-    generate(): string | null
+    generate(): string
 
 }
 
