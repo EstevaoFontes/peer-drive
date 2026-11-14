@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { IHashService } from "../../services/password-hash-service.interface.js";
+import { type IHashService } from "../../services/password-hash-service.interface.js";
 import * as bcrypt from "bcrypt";
 
 
@@ -19,4 +19,4 @@ export class BcryptHashService implements IHashService {
         return await bcrypt.compare(password, hashed);
     }
 
-}
+}   

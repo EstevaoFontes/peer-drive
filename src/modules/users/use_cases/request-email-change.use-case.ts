@@ -32,13 +32,13 @@ export class RequestEmailChangeUseCase {
 
     async execute(token: string, input: IUpdateEmailDTO): Promise<void> {
 
-        const verifyToken = await this.tokenService.verify(token);
+        const payload = await this.tokenService.verify(token);
 
-        if (!verifyToken) {
+        if (!payload) {
             throw new UnauthorizedException("Token inválido ou expirado.");
         };
 
-        if (input.newEmail === verifyToken.email) {
+        if (input.newEmail === payload.email) {
             throw new BadRequestException("O novo email deve ser diferente do email atual.");
         };
 
@@ -56,7 +56,7 @@ export class RequestEmailChangeUseCase {
             code: code
         };
 
-        await this.mailChangeCacheStore.save(verifyToken.userID, data, 300);
+        await this.mailChangeCacheStore.save(payload.userID, data, 300);
 
         await this.mailService.send(
             input.newEmail,
