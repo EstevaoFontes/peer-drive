@@ -28,6 +28,7 @@ describe("Test change password.", () => {
         email: "teste@gmail.com",
         name: "John",
         cpf: "54587419516",
+        phoneNumber: "(11) 98765-4321",
         isContractAccepted: true,
         password: "teste-123-hash",
         createdAt: new Date(),

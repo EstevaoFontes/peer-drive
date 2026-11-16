@@ -9,6 +9,7 @@ interface CreateUserDTO {
     name: string
     email: string
     cpf: string
+    phoneNumber: string
     password: string
     confirmPassword: string
     isContractAccepted: boolean
@@ -40,7 +41,8 @@ export class CreateUserUseCase {
             email: input.email,
             isContractAccepted: input.isContractAccepted,
             name: input.name,
-            password: hashPassword
+            password: hashPassword,
+            phoneNumber: input.phoneNumber
         });
 
         await this.userRepository.create(user);

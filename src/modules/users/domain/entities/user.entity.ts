@@ -1,11 +1,14 @@
 import { Cpf } from "../value-objects/cpf-validate.value-objects.js";
 import { Email } from "../value-objects/email-validate.value-objects.js";
 import { UserId } from "../value-objects/id-create.value-objects.js";
+import { DriverLicense } from "../value-objects/drive-license.value-objects.js";
+import { DriveLicenseCategory } from "../enums/driver-license-category.enum.js";
 
 interface ICreateUser {
     email: string;
     name: string;
     cpf: string;
+    phoneNumber: string;
     password: string;
     isContractAccepted: boolean;
 }
@@ -15,10 +18,19 @@ export interface IRestoreUser {
     email: string;
     name: string;
     cpf: string;
+    phoneNumber: string;
     password: string;
     isContractAccepted: boolean;
     createdAt: Date;
     updatedAt: Date;
+    driverLicense: DriverLicense | null | undefined
+}
+
+interface IAddDriverLicense {
+    registration: string
+    category: DriveLicenseCategory
+    firstLicenseDate: Date,
+    expirationDate: Date
 }
 
 export class User {
@@ -27,10 +39,12 @@ export class User {
         public email: Email,
         public name: string,
         public readonly cpf: Cpf,
+        public phoneNumber: string,
         private password: string,
         private isContractAccepted: boolean,
         public readonly createdAt: Date,
-        public updatedAt: Date
+        public updatedAt: Date,
+        private driveLicense: DriverLicense | null | undefined
     ) { };
 
     get passwordValue(): string {
@@ -91,6 +105,10 @@ export class User {
             throw new Error("O contrato deve ser aceito");
         };
 
+        if (!input.phoneNumber) {
+            throw new Error("O número de telefone não pode ser vazio.");
+        };
+
         const newEmail = new Email(input.email);
         const newCpf = new Cpf(input.cpf);
         const dateNow = new Date();
@@ -100,10 +118,12 @@ export class User {
             newEmail,
             input.name,
             newCpf,
+            input.phoneNumber,
             input.password,
             true,
             dateNow,
-            dateNow
+            dateNow,
+            null
         );
 
         return newUser;
@@ -116,10 +136,30 @@ export class User {
             new Email(input.email),
             input.name,
             new Cpf(input.cpf),
+            input.phoneNumber,
             input.password,
             true,
             input.createdAt,
-            input.updatedAt
+            input.updatedAt,
+            input.driverLicense
         );
     };
+
+    public addDriverLicense(input: IAddDriverLicense): void {
+
+        if (this.driveLicense === undefined) {
+            throw new Error("A CNH precisa ser carregada para realizar esta operação.");
+        }
+
+        if (this.driveLicense !== null) {
+            throw new Error("Carteira de motorista já cadastrada.");
+        }
+
+        this.driveLicense = DriverLicense.create({
+            ...input,
+            userId: this.id
+        });
+
+        this.updatedAt = new Date();
+    }
 };

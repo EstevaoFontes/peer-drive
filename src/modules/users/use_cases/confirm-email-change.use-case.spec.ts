@@ -26,6 +26,7 @@ describe("Confirm Email Change Use Case.", () => {
         email: "teste@gmail.com",
         name: "Josh",
         cpf: "54587419516",
+        phoneNumber: "(11) 98765-4321",
         isContractAccepted: true,
         password: "123-abc-456",
         createdAt: new Date(),

@@ -1,9 +1,12 @@
+
 import { Module } from "@nestjs/common";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
+import { DatabaseModule } from "./infrastructure/database/database.module.js";
 
 @Module({
     imports: [
+        DatabaseModule,
         JwtModule.registerAsync({
             inject: [ConfigService],
             useFactory: (configService: ConfigService) => ({
@@ -13,6 +16,7 @@ import { ConfigService } from "@nestjs/config";
                 }
             })
         })
-    ]
+    ],
+    exports: [JwtModule]
 })
 export class CoreModule {}
