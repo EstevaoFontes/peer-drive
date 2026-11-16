@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, type Mocked } from "vitest";
 import { CreateUserUseCase } from "./create-user.use-case.js";
-import { IUserRepository } from "../domain/repositories/user.repository.js";
-import { IHashService } from "../../core/services/password-hash-service.interface.js";
+import { IUserRepository } from "../../domain/repositories/user.repository.js";
+import { IHashService } from "../../../core/services/password-hash-service.interface.js";
 
 describe("Test create User Use Case", () => {
 

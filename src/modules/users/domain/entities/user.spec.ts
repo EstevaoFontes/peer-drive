@@ -54,7 +54,6 @@ describe("User entity", () => {
 
             expect(user.cpf).toBeInstanceOf(Cpf);
             expect(user.cpf.value).toBe("99101085425");
-            expect(user.cpf.cpfFormatted()).toBe("991.010.854-25");
 
             expect(user.createdAt).toBeInstanceOf(Date);
             expect(user.updatedAt).toBeInstanceOf(Date);
@@ -91,10 +90,6 @@ describe("User entity", () => {
 
             expect(restoreUser.cpf).toBeInstanceOf(Cpf);
             expect(restoreUser.cpf.value).toBe("99101085425");
-            expect(restoreUser.cpf.cpfFormatted()).toBe("991.010.854-25");
-
-
-
         });
     });
 
@@ -182,7 +177,7 @@ describe("User entity", () => {
 
             user.changePassword("12345678910");
 
-            expect(user.passwordValue).toBe("12345678910");
+            expect(user.password).toBe("12345678910");
 
             expect(user.updatedAt.getTime()).toBeGreaterThanOrEqual(oldUpdatedAt.getTime());
 

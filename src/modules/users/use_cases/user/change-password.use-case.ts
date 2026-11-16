@@ -1,6 +1,6 @@
-import { type IHashService, HASH_SERVICE_TOKEN } from "../../core/services/password-hash-service.interface.js";
-import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../domain/repositories/user.repository.js";
-import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../core/services/token-service.interface.js";
+import { type IHashService, HASH_SERVICE_TOKEN } from "../../../core/services/password-hash-service.interface.js";
+import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
+import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../../core/services/token-service.interface.js";
 import { Injectable, Inject, BadRequestException, UnauthorizedException, NotFoundException } from "@nestjs/common";
 
 interface IChangePasswordDTO {
@@ -40,13 +40,13 @@ export class ChangePasswordUseCase {
             throw new NotFoundException("Houve um erro, por favor tente novamente mais tarde.");
         };
 
-        const isSamePassword = await this.hashService.compare(input.actualPassword, user.passwordValue);
+        const isSamePassword = await this.hashService.compare(input.actualPassword, user.password);
 
         if (!isSamePassword) {
             throw new UnauthorizedException("Senha incorreta.");
         };
 
-        const isNewPasswordEqualToCurrent = await this.hashService.compare(input.newPassword, user.passwordValue);
+        const isNewPasswordEqualToCurrent = await this.hashService.compare(input.newPassword, user.password);
 
         if (isNewPasswordEqualToCurrent) {
             throw new BadRequestException("A nova senha deve ser diferente da senha atual.");

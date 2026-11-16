@@ -1,9 +1,9 @@
-import { IHashService } from "../../core/services/password-hash-service.interface.js";
-import { IUserRepository } from "../domain/repositories/user.repository.js";
-import { ITokenService } from "../../core/services/token-service.interface.js";
+import { IHashService } from "../../../core/services/password-hash-service.interface.js";
+import { IUserRepository } from "../../domain/repositories/user.repository.js";
+import { ITokenService } from "../../../core/services/token-service.interface.js";
 import { ChangePasswordUseCase } from "./change-password.use-case.js";
 import { describe, it, vi, beforeEach, expect, type Mocked } from "vitest";
-import { User } from "../domain/entities/user.entity.js";
+import { User } from "../../domain/entities/user.entity.js";
 
 describe("Test change password.", () => {
 
@@ -32,7 +32,8 @@ describe("Test change password.", () => {
         isContractAccepted: true,
         password: "teste-123-hash",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        driverLicense: undefined
     });
 
     beforeEach(() => {
@@ -77,7 +78,7 @@ describe("Test change password.", () => {
 
         await changePasswordUseCase.execute("abc-cde-1234", input);
 
-        expect(user.passwordValue).toBe("abc-852-qwe");
+        expect(user.password).toBe("abc-852-qwe");
         expect(tokenServiceMock.verify).toHaveBeenCalledWith("abc-cde-1234");
         expect(userRepositoryMock.findById).toHaveBeenCalledWith("123-abc");
 
@@ -107,7 +108,7 @@ describe("Test change password.", () => {
 
         await expect(changePasswordUseCase.execute("abc-cde-1234", inputNewPasswordDifferent)).rejects.toThrow("As senhas devem ser iguais.");
 
-        expect(user.passwordValue).toBe("teste-123-hash");
+        expect(user.password).toBe("teste-123-hash");
         expect(tokenServiceMock.verify).not.toHaveBeenCalled();
         expect(userRepositoryMock.findById).not.toHaveBeenCalled();
         expect(hashServiceMock.compare).not.toHaveBeenCalled();
@@ -122,7 +123,7 @@ describe("Test change password.", () => {
 
         await expect(changePasswordUseCase.execute("abc-cde-1234", input)).rejects.toThrow("Houve um erro ao te autenticar, tente novamente mais tarde.");
 
-        expect(user.passwordValue).toBe("teste-123-hash");
+        expect(user.password).toBe("teste-123-hash");
         expect(userRepositoryMock.findById).not.toHaveBeenCalled();
         expect(hashServiceMock.compare).not.toHaveBeenCalled();
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
@@ -140,7 +141,7 @@ describe("Test change password.", () => {
 
         await expect(changePasswordUseCase.execute("abc-cde-1234", input)).rejects.toThrow("Houve um erro, por favor tente novamente mais tarde.");
 
-        expect(user.passwordValue).toBe("teste-123-hash");
+        expect(user.password).toBe("teste-123-hash");
         expect(hashServiceMock.compare).not.toHaveBeenCalled();
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
@@ -159,7 +160,7 @@ describe("Test change password.", () => {
 
         await expect(changePasswordUseCase.execute("abc-cde-1234", input)).rejects.toThrow("Senha incorreta.");
 
-        expect(user.passwordValue).toBe("teste-123-hash");
+        expect(user.password).toBe("teste-123-hash");
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
@@ -180,7 +181,7 @@ describe("Test change password.", () => {
 
         await expect(changePasswordUseCase.execute("abc-cde-1234", input)).rejects.toThrow("A nova senha deve ser diferente da senha atual.");
 
-        expect(user.passwordValue).toBe("teste-123-hash");
+        expect(user.password).toBe("teste-123-hash");
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
@@ -203,7 +204,7 @@ describe("Test change password.", () => {
 
         await expect(changePasswordUseCase.execute("abc-cde-1234", input)).rejects.toThrow("O hash da senha não pode ser vazio.");
 
-        expect(user.passwordValue).toBe("teste-123-hash");
+        expect(user.password).toBe("teste-123-hash");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 });

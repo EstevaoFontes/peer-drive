@@ -1,7 +1,7 @@
 import { Injectable, Inject, BadRequestException } from "@nestjs/common";
-import { USER_REPOSITORY_TOKEN, type IUserRepository } from "../domain/repositories/user.repository.js";
-import { type IHashService, HASH_SERVICE_TOKEN } from "../../core/services/password-hash-service.interface.js";
-import { User } from "../domain/entities/user.entity.js";
+import { USER_REPOSITORY_TOKEN, type IUserRepository } from "../../domain/repositories/user.repository.js";
+import { type IHashService, HASH_SERVICE_TOKEN } from "../../../core/services/password-hash-service.interface.js";
+import { User } from "../../domain/entities/user.entity.js";
 
 
 

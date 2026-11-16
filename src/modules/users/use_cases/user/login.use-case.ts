@@ -1,6 +1,6 @@
-import { type IHashService, HASH_SERVICE_TOKEN } from "../../core/services/password-hash-service.interface.js";
-import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../domain/repositories/user.repository.js";
-import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../core/services/token-service.interface.js";
+import { type IHashService, HASH_SERVICE_TOKEN } from "../../../core/services/password-hash-service.interface.js";
+import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
+import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../../core/services/token-service.interface.js";
 import { Injectable, Inject, BadRequestException, InternalServerErrorException } from "@nestjs/common";
 
 interface UserLoginDTO {
@@ -31,7 +31,7 @@ export class LoginUserUserCase {
             throw new BadRequestException("Email ou senha inválidos.");
         }
 
-        const comparePassword = await this.hashService.compare(input.password, user.passwordValue);
+        const comparePassword = await this.hashService.compare(input.password, user.password);
 
         if (!comparePassword) {
             throw new BadRequestException("Email ou senha inválidos.");

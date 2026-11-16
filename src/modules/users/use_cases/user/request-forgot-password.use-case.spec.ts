@@ -1,9 +1,9 @@
-import { ICodeGeneratorService } from "../../core/services/generate-code-service.interface.js";
-import { IMailService } from "../../core/services/mail-service.interface.js";
-import { IUserRepository } from "../domain/repositories/user.repository.js";
-import { IPasswordCacheService } from "../../core/services/password-change-cache-service.interface.js";
+import { ICodeGeneratorService } from "../../../core/services/generate-code-service.interface.js";
+import { IMailService } from "../../../core/services/mail-service.interface.js";
+import { IUserRepository } from "../../domain/repositories/user.repository.js";
+import { IPasswordCacheService } from "../../../core/services/password-change-cache-service.interface.js";
 import { RequestForgotPasswordUseCase } from "./request-forgot-password.use-case.js";
-import { User } from "../domain/entities/user.entity.js";
+import { User } from "../../domain/entities/user.entity.js";
 import { describe, it, vi, expect, beforeEach, type Mocked } from "vitest";
 
 describe("Test Request Forgot password.", () => {
@@ -33,7 +33,8 @@ describe("Test Request Forgot password.", () => {
         isContractAccepted: true,
         password: "qwerty-a-12345",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        driverLicense: undefined
     });
 
     beforeEach(() => {

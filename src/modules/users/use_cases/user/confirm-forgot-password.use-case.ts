@@ -1,6 +1,6 @@
-import { type IPasswordCacheService, PASSWORD_CACHE_SERVICE_TOKEN } from "../../core/services/password-change-cache-service.interface.js";
-import { type IHashService, HASH_SERVICE_TOKEN } from "../../core/services/password-hash-service.interface.js";
-import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../domain/repositories/user.repository.js";
+import { type IPasswordCacheService, PASSWORD_CACHE_SERVICE_TOKEN } from "../../../core/services/password-change-cache-service.interface.js";
+import { type IHashService, HASH_SERVICE_TOKEN } from "../../../core/services/password-hash-service.interface.js";
+import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
 import { Injectable, Inject, BadRequestException, NotFoundException } from "@nestjs/common";
 
 interface ConfirmForgotPasswordDTO {

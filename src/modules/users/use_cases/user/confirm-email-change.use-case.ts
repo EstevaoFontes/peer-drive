@@ -1,7 +1,7 @@
 import { Inject, Injectable, UnauthorizedException, NotFoundException } from "@nestjs/common";
-import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../core/services/token-service.interface.js";
-import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../domain/repositories/user.repository.js";
-import { type IMailChangeCacheService, MAIL_CHANGE_CACHE_TOKEN } from "../../core/services/mail-change-cache-service.interface.js";
+import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../../core/services/token-service.interface.js";
+import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
+import { type IMailChangeCacheService, MAIL_CHANGE_CACHE_TOKEN } from "../../../core/services/mail-change-cache-service.interface.js";
 
 interface confirmEmailChengeDTO {
     code: string

@@ -1,8 +1,8 @@
 import { describe, it, beforeEach, vi, expect, type Mocked } from "vitest";
-import { User } from "../domain/entities/user.entity.js";
-import { IUserRepository } from "../domain/repositories/user.repository.js";
-import { IHashService } from "../../core/services/password-hash-service.interface.js";
-import { ITokenService } from "../../core/services/token-service.interface.js";
+import { User } from "../../domain/entities/user.entity.js";
+import { IUserRepository } from "../../domain/repositories/user.repository.js";
+import { IHashService } from "../../../core/services/password-hash-service.interface.js";
+import { ITokenService } from "../../../core/services/token-service.interface.js";
 import { LoginUserUserCase } from "./login.use-case.js";
 
 describe("Test Login User Use Case", () => {
@@ -27,7 +27,8 @@ describe("Test Login User Use Case", () => {
         isContractAccepted: true,
         password: "123-abc-456",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        driverLicense: undefined
     });
 
     const input = {
@@ -76,7 +77,7 @@ describe("Test Login User Use Case", () => {
 
         expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith(input.email);
 
-        expect(hashServiceMock.compare).toHaveBeenCalledWith(input.password, user.passwordValue);
+        expect(hashServiceMock.compare).toHaveBeenCalledWith(input.password, user.password);
 
         expect(tokenServiceMock.generate).toHaveBeenCalledWith(
             {
@@ -109,7 +110,7 @@ describe("Test Login User Use Case", () => {
         await expect(loginUserUseCase.execute(input)).rejects.toThrow("Email ou senha inválidos.");
 
         expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith("john@gmail.com");
-        expect(hashServiceMock.compare).toHaveBeenCalledWith(input.password, user.passwordValue);
+        expect(hashServiceMock.compare).toHaveBeenCalledWith(input.password, user.password);
         expect(tokenServiceMock.generate).not.toHaveBeenCalled();
     });
 
@@ -123,7 +124,7 @@ describe("Test Login User Use Case", () => {
         await expect(loginUserUseCase.execute(input)).rejects.toThrow("Houve um erro ao te autenticar, por favor tente novamente mais tarde.");
 
         expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith("john@gmail.com");
-        expect(hashServiceMock.compare).toHaveBeenCalledWith(input.password, user.passwordValue);
+        expect(hashServiceMock.compare).toHaveBeenCalledWith(input.password, user.password);
         expect(tokenServiceMock.generate).toHaveBeenCalledWith({
             userID: user.id.value,
             email: user.email.value
