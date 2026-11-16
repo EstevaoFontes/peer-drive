@@ -1,8 +1,8 @@
-import { ITokenService } from "../../core/services/token-service.interface.js";
-import { IUserRepository } from "../domain/repositories/user.repository.js";
-import { ICodeGeneratorService } from "../../core/services/generate-code-service.interface.js";
-import { IMailChangeCacheService } from "../../core/services/mail-change-cache-service.interface.js";
-import { IMailService } from "../../core/services/mail-service.interface.js";
+import { ITokenService } from "../../../core/services/token-service.interface.js";
+import { IUserRepository } from "../../domain/repositories/user.repository.js";
+import { ICodeGeneratorService } from "../../../core/services/generate-code-service.interface.js";
+import { IMailChangeCacheService } from "../../../core/services/mail-change-cache-service.interface.js";
+import { IMailService } from "../../../core/services/mail-service.interface.js";
 import { RequestEmailChangeUseCase } from "./request-email-change.use-case.js";
 import { describe, expect, it, beforeEach, vi, type Mocked } from "vitest";
 

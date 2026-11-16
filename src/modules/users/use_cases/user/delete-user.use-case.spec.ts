@@ -1,6 +1,6 @@
-import { ITokenService } from "../../core/services/token-service.interface.js";
-import { IUserRepository } from "../domain/repositories/user.repository.js";
-import { DeleteUserUseCase } from "./delte-user.use-case.js";
+import { ITokenService } from "../../../core/services/token-service.interface.js";
+import { IUserRepository } from "../../domain/repositories/user.repository.js";
+import { DeleteUserUseCase } from "./delete-user.use-case.js";
 import { describe, it, vi, expect, type Mocked, beforeEach } from "vitest";
 
 describe("Teste Delete User", () => {

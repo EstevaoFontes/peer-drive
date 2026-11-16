@@ -1,8 +1,8 @@
-import { IPasswordCacheService } from "../../core/services/password-change-cache-service.interface.js";
-import { IHashService } from "../../core/services/password-hash-service.interface.js";
-import { IUserRepository } from "../domain/repositories/user.repository.js";
+import { IPasswordCacheService } from "../../../core/services/password-change-cache-service.interface.js";
+import { IHashService } from "../../../core/services/password-hash-service.interface.js";
+import { IUserRepository } from "../../domain/repositories/user.repository.js";
 import { ConfirmForgotPasswordUseCase } from "./confirm-forgot-password.use-case.js";
-import { User } from "../domain/entities/user.entity.js";
+import { User } from "../../domain/entities/user.entity.js";
 import { describe, it, vi, expect, beforeEach, type Mocked } from "vitest";
 
 describe("Test Confirm Forgot Password", () => {
@@ -33,7 +33,8 @@ describe("Test Confirm Forgot Password", () => {
         isContractAccepted: true,
         password: "qwerty-a-12345",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        driverLicense: undefined
     });
 
 
@@ -79,7 +80,7 @@ describe("Test Confirm Forgot Password", () => {
             await confirmForgotPasswordUseCase.execute(input);
 
             expect(hashServiceMock.hash).toHaveBeenCalledWith(input.newPassword);
-            expect(user.passwordValue).toBe("hashed_password_123");
+            expect(user.password).toBe("hashed_password_123");
             expect(userRepositoryMock.update).toHaveBeenCalledWith(user);
             expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
         });
@@ -99,7 +100,7 @@ describe("Test Confirm Forgot Password", () => {
         expect(userRepositoryMock.findByEmail).not.toHaveBeenCalled();
         expect(passwordCacheServiceMock.consumeCode).not.toHaveBeenCalled();
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(user.passwordValue).toBe("qwerty-a-12345");
+        expect(user.password).toBe("qwerty-a-12345");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
@@ -113,7 +114,7 @@ describe("Test Confirm Forgot Password", () => {
 
         expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith("john@gmail.com");
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(user.passwordValue).toBe("qwerty-a-12345");
+        expect(user.password).toBe("qwerty-a-12345");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
@@ -126,7 +127,7 @@ describe("Test Confirm Forgot Password", () => {
         expect(passwordCacheServiceMock.consumeCode).toHaveBeenCalledWith(input.code);
 
         expect(hashServiceMock.hash).not.toHaveBeenCalled();
-        expect(user.passwordValue).toBe("qwerty-a-12345");
+        expect(user.password).toBe("qwerty-a-12345");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 
@@ -144,7 +145,7 @@ describe("Test Confirm Forgot Password", () => {
         expect(userRepositoryMock.findByEmail).toHaveBeenCalledWith("john@gmail.com");
         expect(hashServiceMock.hash).toHaveBeenCalledWith(input.newPassword);
 
-        expect(user.passwordValue).toBe("qwerty-a-12345");
+        expect(user.password).toBe("qwerty-a-12345");
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
     });
 });

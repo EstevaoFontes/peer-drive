@@ -1,7 +1,7 @@
-import { IUserRepository } from "../domain/repositories/user.repository.js";
-import { ITokenService } from "../../core/services/token-service.interface.js";
+import { IUserRepository } from "../../domain/repositories/user.repository.js";
+import { ITokenService } from "../../../core/services/token-service.interface.js";
 import { ChangeUserNameUseCase } from "./change-name.use-case.js";
-import { User } from "../domain/entities/user.entity.js";
+import { User } from "../../domain/entities/user.entity.js";
 import { describe, it, vi, beforeEach, expect, type Mocked } from "vitest";
 
 describe("Test Change Name User Use Case", () => {
@@ -27,7 +27,8 @@ describe("Test Change Name User Use Case", () => {
         isContractAccepted: true,
         password: "123456-abc",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        driverLicense: undefined
     });
 
     beforeEach(() => {

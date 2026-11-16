@@ -35,21 +35,64 @@ interface IAddDriverLicense {
 
 export class User {
     constructor(
-        public readonly id: UserId,
-        public email: Email,
-        public name: string,
-        public readonly cpf: Cpf,
-        public phoneNumber: string,
-        private password: string,
-        private isContractAccepted: boolean,
-        public readonly createdAt: Date,
-        public updatedAt: Date,
+        private readonly _id: UserId,
+        private _email: Email,
+        private _name: string,
+        private readonly _cpf: Cpf,
+        private _phoneNumber: string,
+        private _password: string,
+        private readonly isContractAccepted: boolean,
+        private readonly _createdAt: Date,
+        private _updatedAt: Date,
         private driveLicense: DriverLicense | null | undefined
     ) { };
 
-    get passwordValue(): string {
-        return this.password;
+    get id(): UserId {
+        return this._id;
+    }
+
+    get password(): string {
+        return this._password;
     };
+
+    get phoneNumber(): string {
+        return this._phoneNumber;
+    }
+
+    get name(): string {
+        return this._name;
+    }
+
+    get email(): Email {
+        return this._email;
+    }
+
+    get cpf(): Cpf {
+        return this._cpf;
+    }
+
+    get createdAt(): Date {
+        return new Date(this._createdAt);
+    }
+
+    get updatedAt(): Date {
+        return new Date(this._updatedAt);
+    }
+
+    public changePhoneNumber(newPhoneNumber: string): void {
+
+        if (!newPhoneNumber.trim()) {
+            throw new Error("O número de telefone não pode ser vazio.");
+        }
+
+        if (newPhoneNumber === this._phoneNumber) {
+            throw new Error("O número novo deve ser diferente do atual.");
+        }
+
+        this._phoneNumber = newPhoneNumber;
+
+        this._updatedAt = new Date();
+    }
 
     public changeEmail(newEmail: string): void {
 
@@ -57,12 +100,12 @@ export class User {
             throw new Error("O email deve ser passado.");
         };
 
-        if (newEmail === this.email.value) {
+        if (newEmail === this._email.value) {
             throw new Error("O novo email deve ser diferente do atual.");
         };
 
-        this.email = new Email(newEmail);
-        this.updatedAt = new Date();
+        this._email = new Email(newEmail);
+        this._updatedAt = new Date();
 
     };
 
@@ -73,8 +116,8 @@ export class User {
         };
 
 
-        this.password = newPasswordHash;
-        this.updatedAt = new Date();
+        this._password = newPasswordHash;
+        this._updatedAt = new Date();
     }
 
     public changeName(newName: string): void {
@@ -87,7 +130,8 @@ export class User {
             throw new Error("Os nomes não podem ser iguais.");
         }
 
-        this.name = newName.trim();
+        this._name = newName.trim();
+        this._updatedAt = new Date();
     }
 
 
@@ -160,6 +204,6 @@ export class User {
             userId: this.id
         });
 
-        this.updatedAt = new Date();
+        this._updatedAt = new Date();
     }
 };

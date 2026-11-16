@@ -1,7 +1,7 @@
-import { type ICodeGeneratorService, CODE_GENERATOR_SERVICE_TOKEN } from "../../core/services/generate-code-service.interface.js";
-import { type IMailService, MAIL_SERVICE_TOKEN } from "../../core/services/mail-service.interface.js";
-import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../domain/repositories/user.repository.js";
-import { type IPasswordCacheService, PASSWORD_CACHE_SERVICE_TOKEN } from "../../core/services/password-change-cache-service.interface.js";
+import { type ICodeGeneratorService, CODE_GENERATOR_SERVICE_TOKEN } from "../../../core/services/generate-code-service.interface.js";
+import { type IMailService, MAIL_SERVICE_TOKEN } from "../../../core/services/mail-service.interface.js";
+import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
+import { type IPasswordCacheService, PASSWORD_CACHE_SERVICE_TOKEN } from "../../../core/services/password-change-cache-service.interface.js";
 import { Injectable, Inject } from "@nestjs/common";
 
 interface IForgotPasswordDTO {

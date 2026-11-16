@@ -1,9 +1,9 @@
-import { ITokenService } from "../../core/services/token-service.interface.js";
-import { IUserRepository } from "../domain/repositories/user.repository.js";
-import { IMailChangeCacheService } from "../../core/services/mail-change-cache-service.interface.js";
+import { ITokenService } from "../../../core/services/token-service.interface.js";
+import { IUserRepository } from "../../domain/repositories/user.repository.js";
+import { IMailChangeCacheService } from "../../../core/services/mail-change-cache-service.interface.js";
 import { describe, expect, it, beforeEach, vi, type Mocked } from "vitest";
 import { ConfirmEmailChengeUseCase } from "./confirm-email-change.use-case.js";
-import { User } from "../domain/entities/user.entity.js";
+import { User } from "../../domain/entities/user.entity.js";
 
 describe("Confirm Email Change Use Case.", () => {
 
@@ -30,7 +30,8 @@ describe("Confirm Email Change Use Case.", () => {
         isContractAccepted: true,
         password: "123-abc-456",
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
+        driverLicense: undefined
     });
 
     beforeEach(() => {
