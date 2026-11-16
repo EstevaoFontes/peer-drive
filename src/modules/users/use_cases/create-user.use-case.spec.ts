@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, type Mocked } from "vitest";
 import { CreateUserUseCase } from "./create-user.use-case.js";
 import { IUserRepository } from "../domain/repositories/user.repository.js";
 import { IHashService } from "../../core/services/password-hash-service.interface.js";
-import { type CreateUserDTO } from "./dtos/create-user.dto.js";
 
 describe("Test create User Use Case", () => {
 
@@ -13,10 +12,11 @@ describe("Test create User Use Case", () => {
     let hashServiceMock: IHashServiceMock;
     let crateUserUseCase: CreateUserUseCase;
 
-    const input: CreateUserDTO = {
+    const input = {
         name: "John Doe",
         email: "john@gmail.com",
         cpf: "54587419516",
+        phoneNumber: "(11) 98765-4321",
         isContractAccepted: true,
         password: "nova-senha",
         confirmPassword: "nova-senha",
@@ -75,6 +75,7 @@ describe("Test create User Use Case", () => {
                 name: "Jo",
                 email: "john@gmail.com",
                 cpf: "54587419516",
+                phoneNumber: "(11) 98765-4321",
                 password: "nova-senha",
                 confirmPassword: "nova-senha",
                 expectedError: "O nome não pode ter menos de 3 caracteres."
@@ -84,6 +85,7 @@ describe("Test create User Use Case", () => {
                 name: "John",
                 email: "john@gmail.com",
                 cpf: "54587419516",
+                phoneNumber: "(11) 98765-4321",
                 password: "",
                 confirmPassword: "",
                 expectedError: "A senha está mal formatada."
@@ -94,6 +96,7 @@ describe("Test create User Use Case", () => {
                 name: "John",
                 email: "johngmail.com",
                 cpf: "54587419516",
+                phoneNumber: "(11) 98765-4321",
                 password: "nova-senha",
                 confirmPassword: "nova-senha",
                 expectedError: "Formato de e-mail invalido."
@@ -104,6 +107,7 @@ describe("Test create User Use Case", () => {
                 name: "John",
                 email: "",
                 cpf: "54587419516",
+                phoneNumber: "(11) 98765-4321",
                 password: "nova-senha",
                 confirmPassword: "nova-senha",
                 expectedError: "O e-mail não pode ser vazio."
@@ -114,6 +118,7 @@ describe("Test create User Use Case", () => {
                 name: "John",
                 email: "john@gmail.com",
                 cpf: "12345678912",
+                phoneNumber: "(11) 98765-4321",
                 password: "nova-senha",
                 confirmPassword: "nova-senha",
                 expectedError: "CPF invalido."
@@ -124,16 +129,28 @@ describe("Test create User Use Case", () => {
                 name: "John",
                 email: "john@gmail.com",
                 cpf: "",
+                phoneNumber: "(11) 98765-4321",
                 password: "nova-senha",
                 confirmPassword: "nova-senha",
                 expectedError: "O CPF não pode ser vazio."
             },
-        ])("$testCase", async ({ name, email, cpf, password, confirmPassword, expectedError }) => {
+            {
+                testCase: "Should throw error if phone number is empty.",
+                name: "John",
+                email: "john@gmail.com",
+                cpf: "54587419516",
+                phoneNumber: "",
+                password: "nova-senha",
+                confirmPassword: "nova-senha",
+                expectedError: "O número de telefone não pode ser vazio."
+            },
+        ])("$testCase", async ({ name, email, cpf, phoneNumber, password, confirmPassword, expectedError }) => {
 
-            const wrongInput: CreateUserDTO = {
+            const wrongInput = {
                 name: name,
                 email: email,
                 cpf: cpf,
+                phoneNumber: phoneNumber,
                 isContractAccepted: true,
                 password: password,
                 confirmPassword: confirmPassword

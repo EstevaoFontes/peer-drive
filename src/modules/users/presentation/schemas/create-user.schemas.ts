@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { phoneNumberSchema } from "./phoneNumber.schema.js";
 
 export const createUserSchema = z.object({
     name: z.string().trim().min(3),
@@ -8,8 +9,8 @@ export const createUserSchema = z.object({
         .regex(/^\d+$/, "O CPF deve conter apenas números."),
     password: z.string().min(6, "A senha deve ter no minimo 6 caracteres."),
     confirmPassword: z.string(),
-    isContractAccepted: z.literal(true, { error: "É necessário aceitar os termos de uso" })
-
+    isContractAccepted: z.literal(true, { error: "É necessário aceitar os termos de uso" }),
+    phoneNumber: phoneNumberSchema
 }).refine(
     (data) => data.password === data.confirmPassword,
     {

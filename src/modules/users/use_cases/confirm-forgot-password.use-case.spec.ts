@@ -29,6 +29,7 @@ describe("Test Confirm Forgot Password", () => {
         email: "teste@gmail.com",
         name: "John",
         cpf: "54587419516",
+        phoneNumber: "(11) 98765-4321",
         isContractAccepted: true,
         password: "qwerty-a-12345",
         createdAt: new Date(),
@@ -132,7 +133,7 @@ describe("Test Confirm Forgot Password", () => {
     it("Should throw error if hash is empty.", async () => {
 
         vi.mocked(passwordCacheServiceMock.consumeCode).mockResolvedValue({ email: "john@gmail.com" });
-        
+
         vi.mocked(userRepositoryMock.findByEmail).mockResolvedValue(user);
 
         vi.mocked(hashServiceMock.hash).mockResolvedValue("");

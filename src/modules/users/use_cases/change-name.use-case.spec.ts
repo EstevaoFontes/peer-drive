@@ -23,6 +23,7 @@ describe("Test Change Name User Use Case", () => {
         email: "teste@gmail.com",
         name: "John",
         cpf: "54587419516",
+        phoneNumber: "(11) 98765-4321",
         isContractAccepted: true,
         password: "123456-abc",
         createdAt: new Date(),
