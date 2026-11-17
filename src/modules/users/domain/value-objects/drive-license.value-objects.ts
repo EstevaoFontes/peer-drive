@@ -145,7 +145,7 @@ export class DriverLicense {
         }
 
         if(newCategory == this._category){
-            throw new Error("A nova categoria não pode ser o mesmo da anterior.");
+            throw new Error("A nova categoria não pode ser a mesma da anterior.");
         }
 
         this._category = newCategory;

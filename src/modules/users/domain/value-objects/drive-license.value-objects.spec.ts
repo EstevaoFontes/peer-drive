@@ -199,7 +199,7 @@ describe("Test Drive License object value", () => {
             {
                 testCase: "It should throw an error if new category is equal then actual category.",
                 newCategory: DriveLicenseCategory.AC,
-                expectedError: "A nova categoria não pode ser o mesmo da anterior."
+                expectedError: "A nova categoria não pode ser a mesma da anterior."
             },
         ])("$testCase", ({ newCategory, expectedError }) => {
 

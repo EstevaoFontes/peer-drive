@@ -203,4 +203,31 @@ describe("Test UPDATE category in Driver License.", () => {
         expect(userRepositoryMock.update).not.toHaveBeenCalled();
 
     });
+
+    it("Should throw an error if the new category is equal to the current category.", async () => {
+
+        const inputSameCategory = {
+            category: "AB"as DriveLicenseCategory
+        };
+
+        vi.mocked(tokenServiceMock.verify).mockResolvedValue({
+            userID: "123-abc",
+            email: "paulo@gmail.com"
+
+        });
+
+        vi.mocked(userRepositoryMock.findByIdWithDriverLicense).mockResolvedValue(userWithDriverLicense);
+
+        await expect(updateDriverLicenseCategoryUseCase.execute("123-asd-vadads", inputSameCategory))
+            .rejects
+            .toThrow("A nova categoria não pode ser a mesma da anterior.");
+
+        expect(tokenServiceMock.verify).toHaveBeenCalledWith("123-asd-vadads");
+        expect(tokenServiceMock.verify).toHaveBeenCalledTimes(1);
+
+        expect(userRepositoryMock.findByIdWithDriverLicense).toHaveBeenCalledWith("123-abc");
+        expect(userRepositoryMock.findByIdWithDriverLicense).toHaveBeenCalledTimes(1);
+
+        expect(userRepositoryMock.update).not.toHaveBeenCalled();
+    });
 });
