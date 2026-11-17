@@ -38,7 +38,8 @@ describe("Test Change phone number use case", () => {
             findByEmail: vi.fn(),
             findById: vi.fn(),
             update: vi.fn(),
-            delete: vi.fn()
+            delete: vi.fn(),
+            findByIdWithDriverLicense: vi.fn()
         };
 
         tokenServiceMock = {

@@ -7,6 +7,7 @@ export interface IUserRepository {
     findById(id: string): Promise<User | null>;
     existEmail(email: string): Promise<boolean>;
     findByEmail(email: string): Promise<User | null>;
+    findByIdWithDriverLicense(id: string): Promise<User | null>
     update(user: User): Promise<void>;
     delete(id: string): Promise<boolean>;
 }

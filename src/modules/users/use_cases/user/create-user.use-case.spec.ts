@@ -30,7 +30,8 @@ describe("Test create User Use Case", () => {
             findByEmail: vi.fn(),
             findById: vi.fn(),
             update: vi.fn(),
-            delete: vi.fn()
+            delete: vi.fn(),
+            findByIdWithDriverLicense: vi.fn()
 
         };
 

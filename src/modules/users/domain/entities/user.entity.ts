@@ -33,6 +33,14 @@ interface IAddDriverLicense {
     expirationDate: Date
 }
 
+
+interface GetDriverLicenseDTO {
+    readonly registration: string
+    readonly category: DriveLicenseCategory
+    readonly firstLicenseDate: Date,
+    readonly expirationDate: Date
+}
+
 export class User {
     constructor(
         private readonly _id: UserId,
@@ -44,7 +52,7 @@ export class User {
         private readonly isContractAccepted: boolean,
         private readonly _createdAt: Date,
         private _updatedAt: Date,
-        private driveLicense: DriverLicense | null | undefined
+        private _driverLicense: DriverLicense | null | undefined
     ) { };
 
     get id(): UserId {
@@ -149,7 +157,7 @@ export class User {
             throw new Error("O contrato deve ser aceito");
         };
 
-        if (!input.phoneNumber) {
+        if (!input.phoneNumber.trim()) {
             throw new Error("O número de telefone não pode ser vazio.");
         };
 
@@ -182,7 +190,7 @@ export class User {
             new Cpf(input.cpf),
             input.phoneNumber,
             input.password,
-            true,
+            input.isContractAccepted,
             input.createdAt,
             input.updatedAt,
             input.driverLicense
@@ -191,19 +199,37 @@ export class User {
 
     public addDriverLicense(input: IAddDriverLicense): void {
 
-        if (this.driveLicense === undefined) {
+        if (this._driverLicense === undefined) {
             throw new Error("A CNH precisa ser carregada para realizar esta operação.");
         }
 
-        if (this.driveLicense !== null) {
+        if (this._driverLicense !== null) {
             throw new Error("Carteira de motorista já cadastrada.");
         }
 
-        this.driveLicense = DriverLicense.create({
+        this._driverLicense = DriverLicense.create({
             ...input,
             userId: this.id
         });
 
         this._updatedAt = new Date();
+    }
+
+    public get driverLicense(): GetDriverLicenseDTO | null | undefined {
+        if (this._driverLicense === null) {
+            return null;
+        }
+
+        if (this._driverLicense === undefined) {
+            return undefined;
+        }
+        
+
+        return {
+            registration: this._driverLicense.registration,
+            category: this._driverLicense.category,
+            firstLicenseDate: new Date(this._driverLicense.firstLicenseDate),
+            expirationDate: new Date(this._driverLicense.expirationDate)
+        };
     }
 };

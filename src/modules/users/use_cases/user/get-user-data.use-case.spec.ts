@@ -34,7 +34,8 @@ describe("Test request get data to user.", () => {
             findByEmail: vi.fn(),
             findById: vi.fn(),
             update: vi.fn(),
-            delete: vi.fn()
+            delete: vi.fn(),
+            findByIdWithDriverLicense: vi.fn()
         };
 
         tokenServiceMock = {

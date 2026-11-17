@@ -21,6 +21,7 @@ describe("Teste Delete User", () => {
             findById: vi.fn(),
             update: vi.fn(),
             delete: vi.fn(),
+            findByIdWithDriverLicense: vi.fn()
         };
 
         tokenServiceMock = {

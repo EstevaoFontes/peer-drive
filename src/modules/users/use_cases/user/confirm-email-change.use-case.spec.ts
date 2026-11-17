@@ -46,7 +46,8 @@ describe("Confirm Email Change Use Case.", () => {
             findByEmail: vi.fn(),
             findById: vi.fn(),
             update: vi.fn(),
-            delete: vi.fn()
+            delete: vi.fn(),
+            findByIdWithDriverLicense: vi.fn()
         };
 
         mailChangeCacheMock = {
