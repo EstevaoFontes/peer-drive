@@ -216,7 +216,7 @@ export class User {
     }
 
     public get driverLicense(): GetDriverLicenseDTO | null | undefined {
-        
+
         if (this._driverLicense === null) {
             return null;
         }
@@ -224,7 +224,7 @@ export class User {
         if (this._driverLicense === undefined) {
             return undefined;
         }
-        
+
 
         return {
             registration: this._driverLicense.registration,
@@ -232,5 +232,18 @@ export class User {
             firstLicenseDate: new Date(this._driverLicense.firstLicenseDate),
             expirationDate: new Date(this._driverLicense.expirationDate)
         };
+    }
+
+    public updateDriverLicenseCategory(newCategory: DriveLicenseCategory): void {
+        if (this._driverLicense === undefined) {
+            throw new Error("A CNH precisa ser carregada para realizar esta operação.");
+        }
+
+        if (this._driverLicense === null) {
+            throw new Error("O usuário não possui uma CNH cadastrada.");
+        }
+
+        this._driverLicense.addNewCategory(newCategory);
+        this._updatedAt = new Date();
     }
 };
