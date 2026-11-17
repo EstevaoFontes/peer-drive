@@ -34,7 +34,7 @@ interface IAddDriverLicense {
 }
 
 
-interface GetDriverLicenseDTO {
+export interface GetDriverLicenseDTO {
     readonly registration: string
     readonly category: DriveLicenseCategory
     readonly firstLicenseDate: Date,
@@ -216,6 +216,7 @@ export class User {
     }
 
     public get driverLicense(): GetDriverLicenseDTO | null | undefined {
+        
         if (this._driverLicense === null) {
             return null;
         }
