@@ -39,6 +39,7 @@ describe("Test request mail change use case.", () => {
             findById: vi.fn(),
             update: vi.fn(),
             delete: vi.fn(),
+            findByIdWithDriverLicense: vi.fn()
         };
 
         mailChangeCacheMock = {

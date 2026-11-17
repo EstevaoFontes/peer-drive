@@ -3,12 +3,12 @@ import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/reposi
 import { Injectable, Inject, UnauthorizedException, NotFoundException } from "@nestjs/common";
 
 interface GetUserDataDTO {
-    email: string
-    name: string
-    cpf: string
-    phoneNumber: string
-    createdAt: Date
-    updatedAt: Date
+    readonly email: string
+    readonly name: string
+    readonly cpf: string
+    readonly phoneNumber: string
+    readonly createdAt: Date
+    readonly updatedAt: Date
 }
 
 @Injectable()
