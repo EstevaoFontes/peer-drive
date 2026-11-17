@@ -246,4 +246,17 @@ export class User {
         this._driverLicense.addNewCategory(newCategory);
         this._updatedAt = new Date();
     }
+
+    public renewDriverLicense(newExpirationDate: Date): void {
+        if (this._driverLicense === undefined) {
+            throw new Error("A CNH precisa ser carregada para realizar esta operação.");
+        }
+
+        if (this._driverLicense === null) {
+            throw new Error("O usuário não possui uma CNH cadastrada.");
+        }
+
+        this._driverLicense.renewal(newExpirationDate);
+        this._updatedAt = new Date();
+    }
 };
