@@ -49,7 +49,7 @@ export class User {
         private readonly _cpf: Cpf,
         private _phoneNumber: string,
         private _password: string,
-        private readonly isContractAccepted: boolean,
+        private readonly _isContractAccepted: boolean,
         private readonly _createdAt: Date,
         private _updatedAt: Date,
         private _driverLicense: DriverLicense | null | undefined
@@ -85,6 +85,10 @@ export class User {
 
     get updatedAt(): Date {
         return new Date(this._updatedAt);
+    }
+
+    get isContractAccepted(): boolean {
+        return this._isContractAccepted;
     }
 
     public changePhoneNumber(newPhoneNumber: string): void {
