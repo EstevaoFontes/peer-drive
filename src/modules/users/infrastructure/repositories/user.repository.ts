@@ -77,6 +77,7 @@ export class UserRepository implements IUserRepository {
     }
 
     async update(user: User): Promise<void> {
+        
         await sequelize.transaction(async (transaction) => {
             await UserModel.update({
                 email: user.email.value,
@@ -97,15 +98,27 @@ export class UserRepository implements IUserRepository {
                 return;
             }
 
-            await DriverLicenseModel.update({
-                registration: user.driverLicense.registration,
-                category: user.driverLicense.category,
-                expirationDate: user.driverLicense.expirationDate
-            }, {
+            await DriverLicenseModel.findOrCreate({
                 where: {
                     userId: user.id.value
                 },
+                defaults: {
+                    userId: user.id.value,
+                    registration: user.driverLicense.registration,
+                    category: user.driverLicense.category,
+                    firstLicenseDate: user.driverLicense.firstLicenseDate,
+                    expirationDate: user.driverLicense.expirationDate
+                },
                 transaction
+            }).then(async ([driverLicense, created]) => {
+                if (!created) {
+                    await driverLicense.update({
+                        registration: user.driverLicense!.registration,
+                        category: user.driverLicense!.category,
+                        firstLicenseDate: user.driverLicense!.firstLicenseDate,
+                        expirationDate: user.driverLicense!.expirationDate
+                    }, { transaction });
+                }
             });
         });
     }
@@ -119,7 +132,7 @@ export class UserRepository implements IUserRepository {
         }
 
         await user.destroy();
-        
+
         return true;
     }
 }

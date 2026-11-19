@@ -100,12 +100,12 @@ describe("Test Create Driver License Use Case.", () => {
         expect(userRepositoryMock.findByIdWithDriverLicense).toHaveBeenCalledTimes(1);
 
         expect(user.addDriverLicense).toHaveBeenCalledWith(input);
-        expect(user.driverLicense).toStrictEqual({
-            registration: "12345678901",
-            category: DriveLicenseCategory.AB,
-            firstLicenseDate: new Date("2018-05-10T12:00:00"),
-            expirationDate: new Date("2028-05-10T12:00:00")
-        });
+
+        expect(user.driverLicense?.userId.value).toBe("123-abc");
+        expect(user.driverLicense?.registration).toBe("12345678901");
+        expect(user.driverLicense?.category).toBe(DriveLicenseCategory.AB);
+        expect(user.driverLicense?.firstLicenseDate).toStrictEqual(new Date("2018-05-10T12:00:00"));
+        expect(user.driverLicense?.expirationDate).toStrictEqual(new Date("2028-05-10T12:00:00"));
 
         expect(userRepositoryMock.update).toHaveBeenCalledWith(user);
         expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
