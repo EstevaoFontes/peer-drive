@@ -34,12 +34,7 @@ interface IAddDriverLicense {
 }
 
 
-export interface GetDriverLicenseDTO {
-    readonly registration: string
-    readonly category: DriveLicenseCategory
-    readonly firstLicenseDate: Date,
-    readonly expirationDate: Date
-}
+
 
 export class User {
     constructor(
@@ -219,23 +214,9 @@ export class User {
         this._updatedAt = new Date();
     }
 
-    public get driverLicense(): GetDriverLicenseDTO | null | undefined {
+    public get driverLicense(): DriverLicense | null | undefined {
 
-        if (this._driverLicense === null) {
-            return null;
-        }
-
-        if (this._driverLicense === undefined) {
-            return undefined;
-        }
-
-
-        return {
-            registration: this._driverLicense.registration,
-            category: this._driverLicense.category,
-            firstLicenseDate: new Date(this._driverLicense.firstLicenseDate),
-            expirationDate: new Date(this._driverLicense.expirationDate)
-        };
+        return this._driverLicense;
     }
 
     public updateDriverLicenseCategory(newCategory: DriveLicenseCategory): void {

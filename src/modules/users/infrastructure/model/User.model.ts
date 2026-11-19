@@ -43,7 +43,7 @@ UserModel.init({
         unique: true
     },
     phoneNumber: {
-        type: DataTypes.STRING(11),
+        type: DataTypes.STRING(15),
         allowNull: false
     },
     password: {

@@ -8,9 +8,25 @@ services:
         POSTGRES_PASSWORD: ${DB_PASSWORD}
         POSTGRES_DB: ${DB_NAME}
       ports:
-        - "5433:5432"
+        - "5432:5432"
       volumes:
         - postgres_data:/var/lib/postgresql/data
 
+
+    postgres-test:
+      image: postgres:17
+      container_name: peer-drive-db-test
+      profiles:
+        - test
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: test_password
+        POSTGRES_DB: peer_drive_test
+      ports:
+        - "5433:5432"
+      volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+
 volumes:
   postgres_data:
+  postgres_test_data:

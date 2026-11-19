@@ -22,8 +22,10 @@ export class UserMapper {
 
         if (model.driverLicense === undefined) {
             driverLicense = undefined;
+
         } else if (model.driverLicense === null) {
             driverLicense = null;
+
         } else {
             driverLicense = DriverLicense.restore({
                 userId: new UserId(model.driverLicense.userId),
@@ -32,6 +34,7 @@ export class UserMapper {
                 firstLicenseDate: model.driverLicense.firstLicenseDate,
                 expirationDate: model.driverLicense.expirationDate
             });
+
         }
 
         return User.restore({
@@ -44,7 +47,7 @@ export class UserMapper {
             isContractAccepted: model.isContractAccepted,
             createdAt: model.createdAt,
             updatedAt: model.updatedAt,
-            driverLicense: driverLicense ?? null
+            driverLicense: driverLicense
         });
     }
 }
