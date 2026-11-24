@@ -1,6 +1,6 @@
-import { IMailChangeCacheService, IPendingMailService } from "../../services/mail-change-cache-service.interface.js";
+import { IMailChangeCacheService, IPendingMailService } from "../../../services/mail-change-cache-service.interface.js";
 import { type RedisClientType } from "redis";
-import { REDIS_CLIENT } from "../cache/redis.constants.js";
+import { REDIS_CLIENT } from "../../cache/redis.constants.js";
 import { Inject, Injectable } from "@nestjs/common";
 
 @Injectable()

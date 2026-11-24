@@ -4,6 +4,7 @@ import { type IMailService, MAIL_SERVICE_TOKEN } from "../../../core/services/ma
 import { type ICodeGeneratorService, CODE_GENERATOR_SERVICE_TOKEN } from "../../../core/services/generate-code-service.interface.js";
 import { type IMailChangeCacheService, MAIL_CHANGE_CACHE_TOKEN } from "../../../core/services/mail-change-cache-service.interface.js";
 import { Inject, Injectable, BadRequestException, UnauthorizedException, ConflictException } from "@nestjs/common";
+import { changeEmailTemplate } from "../../../core/infrastructure/email/change-email-template.js";
 
 
 interface IUpdateEmailDTO {
@@ -60,8 +61,9 @@ export class RequestEmailChangeUseCase {
 
         await this.mailService.send(
             input.newEmail,
-            "Alteração de email do usuário",
-            `Seu Código de confirmação é ${code}`
+            "Verification Code to change E-mail.",
+            "Request Change E-mail.",
+            changeEmailTemplate(code)
         );
 
     };

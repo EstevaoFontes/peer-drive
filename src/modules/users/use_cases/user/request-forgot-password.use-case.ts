@@ -3,6 +3,7 @@ import { type IMailService, MAIL_SERVICE_TOKEN } from "../../../core/services/ma
 import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
 import { type IPasswordCacheService, PASSWORD_CACHE_SERVICE_TOKEN } from "../../../core/services/password-change-cache-service.interface.js";
 import { Injectable, Inject } from "@nestjs/common";
+import { forgotPasswordTemplate } from "../../../core/infrastructure/email/forgot-password-template.js";
 
 interface IForgotPasswordDTO {
     email: string
@@ -38,7 +39,12 @@ export class RequestForgotPasswordUseCase {
 
         await this.passwordCacheService.save(code, input.email, 300);
 
-        await this.mailService.send(input.email, "Seu código de confirmação.", `Seu código de confirmação é ${code}.`);
+        await this.mailService.send(
+            input.email,
+            "Verification code to Recovery Password.",
+            "Recovery Password.",
+            forgotPasswordTemplate(code)
+        );
 
     };
 };

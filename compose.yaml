@@ -35,6 +35,14 @@ services:
         - "6379:6379"
       restart: unless-stopped
 
+    mailpit:
+      image: axllent/mailpit:latest
+      container_name: peer-drive-mailpit
+      restart: unless-stopped
+      ports:
+        - "8025:8025"
+        - "1025:1025"
+
 volumes:
   postgres_data:
   postgres_test_data:

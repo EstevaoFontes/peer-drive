@@ -5,6 +5,7 @@ import { IPasswordCacheService } from "../../../core/services/password-change-ca
 import { RequestForgotPasswordUseCase } from "./request-forgot-password.use-case.js";
 import { User } from "../../domain/entities/user.entity.js";
 import { describe, it, vi, expect, beforeEach, type Mocked } from "vitest";
+import { forgotPasswordTemplate } from "../../../core/infrastructure/email/forgot-password-template.js";
 
 describe("Test Request Forgot password.", () => {
 
@@ -89,7 +90,9 @@ describe("Test Request Forgot password.", () => {
 
         expect(mailServiceMock.send).toHaveBeenCalledWith(
             input.email,
-            "Seu código de confirmação.", "Seu código de confirmação é 123456."
+            "Verification code to Recovery Password.",
+            "Recovery Password.",
+            forgotPasswordTemplate("123456")
         );
         expect(mailServiceMock.send).toHaveBeenCalledTimes(1);
     });

@@ -1,4 +1,4 @@
-import { ITokenService, IVerificationResult } from "../../services/token-service.interface.js";
+import { ITokenService, IVerificationResult } from "../../../services/token-service.interface.js";
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 
