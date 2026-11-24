@@ -7,6 +7,7 @@ import { UserModel } from "../model/User.model.js";
 import { DriverLicenseModel } from "../model/DriverLicense.model.js";
 import { DriveLicenseCategory } from "../../domain/enums/driver-license-category.enum.js";
 
+
 describe("Test User Repository Integration. ", () => {
 
     let userRepository: UserRepository;
@@ -25,7 +26,7 @@ describe("Test User Repository Integration. ", () => {
         await sequelize.query("TRUNCATE TABLE \"driverLicense\", \"users\" CASCADE");
 
         user = recreateUser();
-        userRepository = new UserRepository();
+        userRepository = new UserRepository(UserModel, DriverLicenseModel, sequelize);
     });
 
     afterAll(async () => {

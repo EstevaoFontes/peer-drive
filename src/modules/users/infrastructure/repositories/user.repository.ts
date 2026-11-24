@@ -1,18 +1,31 @@
-import { IUserRepository } from "../../domain/repositories/user.repository.js";
+import type { IUserRepository } from "../../domain/repositories/user.repository.js";
 import { UserMapper } from "../mappers/User.mapper.js";
 import { UserModel } from "../model/User.model.js";
 import { DriverLicenseModel } from "../model/DriverLicense.model.js";
 import "../model/assossiations.js";
-import { User } from "../../domain/entities/user.entity.js";
-import { sequelize } from "../../../core/infrastructure/database/sequelize.js";
+import type { User } from "../../domain/entities/user.entity.js";
 import { Injectable } from "@nestjs/common";
+import { InjectConnection, InjectModel } from "@nestjs/sequelize";
+import type { Sequelize } from "sequelize-typescript";
+
 
 @Injectable()
 export class UserRepository implements IUserRepository {
 
+    constructor(
+        @InjectModel(UserModel)
+        private readonly userModel: typeof UserModel,
+
+        @InjectModel(DriverLicenseModel)
+        private readonly driverLicenseModel: typeof DriverLicenseModel,
+
+        @InjectConnection()
+        private readonly sequelize: Sequelize
+    ) { }
+
     async create(user: User): Promise<void> {
 
-        await UserModel.create({
+        await this.userModel.create({
             id: user.id.value,
             email: user.email.value,
             cpf: user.cpf.value,
@@ -28,7 +41,7 @@ export class UserRepository implements IUserRepository {
 
     async existEmail(email: string): Promise<boolean> {
 
-        const user = await UserModel.findOne({
+        const user = await this.userModel.findOne({
             where: { email }
         });
 
@@ -38,7 +51,7 @@ export class UserRepository implements IUserRepository {
 
     async findByEmail(email: string): Promise<User | null> {
 
-        const user = await UserModel.findOne({
+        const user = await this.userModel.findOne({
             where: { email }
         });
 
@@ -52,7 +65,7 @@ export class UserRepository implements IUserRepository {
 
     async findById(id: string): Promise<User | null> {
 
-        const user = await UserModel.findByPk(id);
+        const user = await this.userModel.findByPk(id);
 
         if (!user) {
             return null;
@@ -63,9 +76,9 @@ export class UserRepository implements IUserRepository {
 
     async findByIdWithDriverLicense(id: string): Promise<User | null> {
 
-        const user = await UserModel.findByPk(id, {
+        const user = await this.userModel.findByPk(id, {
             include: {
-                model: DriverLicenseModel,
+                model: this.driverLicenseModel,
                 as: "driverLicense"
             }
         });
@@ -78,9 +91,9 @@ export class UserRepository implements IUserRepository {
     }
 
     async update(user: User): Promise<void> {
-        
-        await sequelize.transaction(async (transaction) => {
-            await UserModel.update({
+
+        await this.sequelize.transaction(async (transaction) => {
+            await this.userModel.update({
                 email: user.email.value,
                 cpf: user.cpf.value,
                 name: user.name,
@@ -99,7 +112,7 @@ export class UserRepository implements IUserRepository {
                 return;
             }
 
-            await DriverLicenseModel.findOrCreate({
+            await this.driverLicenseModel.findOrCreate({
                 where: {
                     userId: user.id.value
                 },
@@ -126,7 +139,7 @@ export class UserRepository implements IUserRepository {
 
     async delete(id: string): Promise<boolean> {
 
-        const user = await UserModel.findByPk(id);
+        const user = await this.userModel.findByPk(id);
 
         if (!user) {
             return false;
