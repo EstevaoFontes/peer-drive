@@ -130,6 +130,9 @@ describe("Test Drive License object value", () => {
 
         it("Should renew driver license.", () => {
 
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date(2026, 10, 13));
+
             const driveLicense = DriverLicense.create({
                 ...driveLicenseData,
                 expirationDate: new Date(2026, 10, 16)
@@ -140,6 +143,8 @@ describe("Test Drive License object value", () => {
             driveLicense.renewal(newExpirationDate);
 
             expect(driveLicense.expirationDate).toEqual(newExpirationDate);
+
+            vi.useRealTimers();
         });
 
         it.each([
