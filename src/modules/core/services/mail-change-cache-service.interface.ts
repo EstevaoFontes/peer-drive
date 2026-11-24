@@ -4,8 +4,8 @@ export interface IPendingMailService {
 }
 
 export interface IMailChangeCacheService {
-    save(userId: string, data: IPendingMailService, timeStampInSeconds: number): Promise<void>
-    consumeCode(UserId: string, code: string): Promise<{newEmail : string} | null>
+    save(userId: string, data: IPendingMailService, expireInSeconds: number): Promise<void>
+    consumeCode(userId: string, code: string): Promise<{newEmail : string} | null>
 }
 
 export const MAIL_CHANGE_CACHE_TOKEN = "IMailChangeStore";
