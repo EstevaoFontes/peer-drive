@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { type ICodeGeneratorService } from "../../services/generate-code-service.interface.js";
+import { type ICodeGeneratorService } from "../../../services/generate-code-service.interface.js";
 import { randomInt } from "node:crypto";
 
 

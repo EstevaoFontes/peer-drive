@@ -1,5 +1,5 @@
-export interface IMailService{
-    send(recipient: string, subject: string, body: string): Promise<void>
+export interface IMailService {
+    send(to: string, subject: string, text: string, html: string): Promise<void>
 };
 
 export const MAIL_SERVICE_TOKEN = "IMailService";

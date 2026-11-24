@@ -5,6 +5,7 @@ import { IMailChangeCacheService } from "../../../core/services/mail-change-cach
 import { IMailService } from "../../../core/services/mail-service.interface.js";
 import { RequestEmailChangeUseCase } from "./request-email-change.use-case.js";
 import { describe, expect, it, beforeEach, vi, type Mocked } from "vitest";
+import { changeEmailTemplate } from "../../../core/infrastructure/email/change-email-template.js";
 
 describe("Test request mail change use case.", () => {
 
@@ -96,8 +97,9 @@ describe("Test request mail change use case.", () => {
         expect(mailServiceMock.send).toHaveBeenCalledTimes(1);
         expect(mailServiceMock.send).toHaveBeenCalledWith(
             input.newEmail,
-            "Alteração de email do usuário",
-            "Seu Código de confirmação é 12345"
+            "Verification Code to change E-mail.",
+            "Request Change E-mail.",
+            changeEmailTemplate("12345")
         );
 
     });
