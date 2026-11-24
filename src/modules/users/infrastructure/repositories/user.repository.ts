@@ -5,8 +5,9 @@ import { DriverLicenseModel } from "../model/DriverLicense.model.js";
 import "../model/assossiations.js";
 import { User } from "../../domain/entities/user.entity.js";
 import { sequelize } from "../../../core/infrastructure/database/sequelize.js";
+import { Injectable } from "@nestjs/common";
 
-
+@Injectable()
 export class UserRepository implements IUserRepository {
 
     async create(user: User): Promise<void> {
