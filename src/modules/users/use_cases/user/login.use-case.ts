@@ -2,15 +2,20 @@ import { type IHashService, HASH_SERVICE_TOKEN } from "../../../core/services/pa
 import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
 import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../../core/services/token-service.interface.js";
 import { Injectable, Inject, BadRequestException, InternalServerErrorException } from "@nestjs/common";
+import { ILoginUserUseCase } from "../../presentation/interfaces/login-user-use-case.interface.js";
 
-interface UserLoginDTO {
+export interface UserLoginDTO {
     email: string
     password: string
 }
 
+export interface UserLoginOutPutDTO {
+    accessToken: string
+}
+
 
 @Injectable()
-export class LoginUserUserCase {
+export class LoginUserUserCase implements ILoginUserUseCase {
 
     constructor(
         @Inject(USER_REPOSITORY_TOKEN)
@@ -23,7 +28,7 @@ export class LoginUserUserCase {
         private readonly tokenService: ITokenService
     ) { }
 
-    async execute(input: UserLoginDTO): Promise<{ accessToken: string }> {
+    async execute(input: UserLoginDTO): Promise<UserLoginOutPutDTO> {
 
         const user = await this.userRepository.findByEmail(input.email);
 
