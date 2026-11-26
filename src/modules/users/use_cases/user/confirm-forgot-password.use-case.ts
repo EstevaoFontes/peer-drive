@@ -2,15 +2,16 @@ import { type IPasswordCacheService, PASSWORD_CACHE_SERVICE_TOKEN } from "../../
 import { type IHashService, HASH_SERVICE_TOKEN } from "../../../core/services/password-hash-service.interface.js";
 import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
 import { Injectable, Inject, BadRequestException, NotFoundException } from "@nestjs/common";
+import { IConfirmForgotPasswordUseCase } from "../../presentation/interfaces/confirm-forgot-password.interface.js";
 
-interface ConfirmForgotPasswordDTO {
+export interface ConfirmForgotPasswordDTO {
     code: string
     newPassword: string
     confirmNewPassword: string
 };
 
 @Injectable()
-export class ConfirmForgotPasswordUseCase {
+export class ConfirmForgotPasswordUseCase implements IConfirmForgotPasswordUseCase {
     constructor(
         @Inject(PASSWORD_CACHE_SERVICE_TOKEN)
         private readonly passwordCacheService: IPasswordCacheService,

@@ -4,13 +4,14 @@ import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/reposi
 import { type IPasswordCacheService, PASSWORD_CACHE_SERVICE_TOKEN } from "../../../core/services/password-change-cache-service.interface.js";
 import { Injectable, Inject } from "@nestjs/common";
 import { forgotPasswordTemplate } from "../../../core/infrastructure/email/forgot-password-template.js";
+import { IForgotPasswordUseCase } from "../../presentation/interfaces/request-forgot-password.interface.js";
 
-interface IForgotPasswordDTO {
+export interface IForgotPasswordDTO {
     email: string
 }
 
 @Injectable()
-export class RequestForgotPasswordUseCase {
+export class RequestForgotPasswordUseCase implements IForgotPasswordUseCase {
     constructor(
 
         @Inject(CODE_GENERATOR_SERVICE_TOKEN)
