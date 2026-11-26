@@ -1,7 +1,17 @@
-import { Controller, Post, Body, BadRequestException, Inject } from "@nestjs/common";
+import { Controller, Post, Body, BadRequestException, Inject, HttpCode, HttpStatus } from "@nestjs/common";
+// SCHEMAS
 import { loginUserSchema } from "../../schemas/user/login-user.schemas.js";
-import { UserLoginOutPutDTO } from "../../../use_cases/user/login.use-case.js";
+import { requestForgotPasswordSchema } from "../../schemas/user/request-forgot-password.schema.js";
+import { confirmForgotPasswordSchema } from "../../schemas/user/confirm-forgot-password.schema.js";
+// INTERFACES
 import { type ILoginUserUseCase, LOGIN_USER_INTERFACE } from "../../interfaces/login-user-use-case.interface.js";
+import { type IForgotPasswordUseCase, FORGOT_PASSWORD_USE_CASE } from "../../interfaces/request-forgot-password.interface.js";
+import { type IConfirmForgotPasswordUseCase, CONFIRM_FORGOT_PASSWORD_USE_CASE } from "../../interfaces/confirm-forgot-password.interface.js";
+
+
+interface LoginOutPutDTO {
+    accessToken: string
+}
 
 
 @Controller("auth")
@@ -9,11 +19,18 @@ export class AuthController {
 
     constructor(
         @Inject(LOGIN_USER_INTERFACE)
-        private readonly loginUserUseCase: ILoginUserUseCase
+        private readonly loginUserUseCase: ILoginUserUseCase,
+
+        @Inject(FORGOT_PASSWORD_USE_CASE)
+        private readonly forgotPasswordUseCase: IForgotPasswordUseCase,
+
+        @Inject(CONFIRM_FORGOT_PASSWORD_USE_CASE)
+        private readonly confirmForgotPasswordUseCase: IConfirmForgotPasswordUseCase
     ) { }
 
     @Post("login")
-    async authUser(@Body() body: unknown): Promise<UserLoginOutPutDTO> {
+    @HttpCode(HttpStatus.OK)
+    async login(@Body() body: unknown): Promise<LoginOutPutDTO> {
 
         const result = loginUserSchema.safeParse(body);
 
@@ -22,6 +39,41 @@ export class AuthController {
         }
 
         return this.loginUserUseCase.execute(result.data);
+    }
+
+
+
+    @Post("request-forgot-password")
+    @HttpCode(HttpStatus.OK)
+    async requestForgotPassword(@Body() body: unknown): Promise<{ message: string }> {
+
+        const result = requestForgotPasswordSchema.safeParse(body);
+
+        if (!result.success) {
+            throw new BadRequestException(result.error.issues[0].message);
+        }
+
+        await this.forgotPasswordUseCase.execute(result.data);
+
+        return { message: "Se o e-mail estiver cadastrado, você receberá as instruções para redefinir sua senha." };
+
+    }
+
+
+    @Post("confirm-forgot-password")
+    @HttpCode(HttpStatus.OK)
+    async confirmForgotPassword(@Body() body: unknown): Promise<{ message: string }> {
+
+        const result = confirmForgotPasswordSchema.safeParse(body);
+
+        if (!result.success) {
+            throw new BadRequestException(result.error.issues[0].message);
+        }
+
+        await this.confirmForgotPasswordUseCase.execute(result.data);
+
+        return { message: "Sua senha foi alterada com sucesso, você já pode fazer o login com a nova senha." };
+
     }
 
 }
