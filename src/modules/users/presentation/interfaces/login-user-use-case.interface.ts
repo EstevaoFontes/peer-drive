@@ -4,4 +4,4 @@ export interface ILoginUserUseCase{
     execute(input: UserLoginDTO): Promise<UserLoginOutPutDTO>
 }
 
-export const LOGIN_USER_INTERFACE_TOKEN = Symbol("ILoginUserUseCase");
+export const LOGIN_USER_USE_CASE_TOKEN = Symbol("ILoginUserUseCase");

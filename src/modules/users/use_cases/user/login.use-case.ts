@@ -15,7 +15,7 @@ export interface UserLoginOutPutDTO {
 
 
 @Injectable()
-export class LoginUserUserCase implements ILoginUserUseCase {
+export class LoginUserUseCase implements ILoginUserUseCase {
 
     constructor(
         @Inject(USER_REPOSITORY_TOKEN)
