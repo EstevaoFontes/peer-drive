@@ -1,92 +1,96 @@
-import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional, NonAttribute } from "sequelize";
-import { sequelize } from "../../../core/infrastructure/database/sequelize.js";
-import type { DriverLicenseModel } from "./DriverLicense.model.js";
 
+import {
+    Table,
+    Column,
+    Model,
+    DataType,
+    PrimaryKey,
+    Default,
+    Unique,
+    HasOne
+} from "sequelize-typescript";
+
+import type {
+    InferAttributes,
+    InferCreationAttributes
+} from "sequelize";
+
+import { DriverLicenseModel } from "./DriverLicense.model.js";
+
+@Table({
+    tableName: "users",
+    timestamps: false
+})
 export class UserModel extends Model<
     InferAttributes<UserModel>,
     InferCreationAttributes<UserModel>
 > {
+
+    @PrimaryKey
+    @Default(DataType.UUIDV4)
+    @Column({
+        type: DataType.UUID,
+        allowNull: false
+    })
     declare id: string;
-    declare email: string;
-    declare name: string;
-    declare cpf: string;
-    declare phoneNumber: string;
-    declare password: string;
-    declare isContractAccepted: boolean;
-    declare createdAt: CreationOptional<Date>;
-    declare updatedAt: CreationOptional<Date>;
 
-    declare driverLicense?: NonAttribute<DriverLicenseModel | null>;
-}
-
-UserModel.init({
-    id: {
-        type: DataTypes.UUID,
+    @Unique
+    @Column({
+        type: DataType.STRING(255),
         allowNull: false,
-        primaryKey: true,
-    },
-    email: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true,
         validate: {
             isEmail: true
         }
-    },
-    name: {
-        type: DataTypes.STRING(255),
+    })
+    declare email: string;
+
+    @Column({
+        type: DataType.STRING(255),
         allowNull: false
-    },
-    cpf: {
-        type: DataTypes.STRING(11),
-        allowNull: false,
-        unique: true
-    },
-    phoneNumber: {
-        type: DataTypes.STRING(15),
+    })
+    declare name: string;
+
+    @Unique
+    @Column({
+        type: DataType.STRING(11),
         allowNull: false
-    },
-    password: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-    },
-    isContractAccepted: {
-        type: DataTypes.BOOLEAN,
+    })
+    declare cpf: string;
+
+    @Column({
+        type: DataType.STRING(15),
         allowNull: false
-    },
-    createdAt: {
-        type: DataTypes.DATE,
+    })
+    declare phoneNumber: string;
+
+    @Column({
+        type: DataType.STRING(255),
         allowNull: false
-    },
-    updatedAt: {
-        type: DataTypes.DATE,
+    })
+    declare password: string;
+
+    @Column({
+        type: DataType.BOOLEAN,
         allowNull: false
-    }
-}, {
-    sequelize,
-    tableName: "users",
-    timestamps: false
-});
+    })
+    declare isContractAccepted: boolean;
 
+    @Column({
+        type: DataType.DATE,
+        allowNull: false
+    })
+    declare createdAt: Date;
 
+    @Column({
+        type: DataType.DATE,
+        allowNull: false
+    })
+    declare updatedAt: Date;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @HasOne(() => DriverLicenseModel, {
+        foreignKey: "userId",
+        as: "driverLicense",
+        onDelete: "CASCADE"
+    })
+    declare driverLicense?: DriverLicenseModel | null;
+}

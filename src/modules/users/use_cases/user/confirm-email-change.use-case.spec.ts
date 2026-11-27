@@ -2,7 +2,7 @@ import { ITokenService } from "../../../core/services/token-service.interface.js
 import { IUserRepository } from "../../domain/repositories/user.repository.js";
 import { IMailChangeCacheService } from "../../../core/services/mail-change-cache-service.interface.js";
 import { describe, expect, it, beforeEach, vi, type Mocked } from "vitest";
-import { ConfirmEmailChengeUseCase } from "./confirm-email-change.use-case.js";
+import { ConfirmEmailChangeUseCase } from "./confirm-email-change.use-case.js";
 import { User } from "../../domain/entities/user.entity.js";
 
 describe("Confirm Email Change Use Case.", () => {
@@ -14,7 +14,7 @@ describe("Confirm Email Change Use Case.", () => {
     let tokenServiceMock: ITokenServiceMock;
     let userRepositoryMock: IUserRepositoryMock;
     let mailChangeCacheMock: IMailChangeCacheServiceMock;
-    let confirmEmailChangeUseCase: ConfirmEmailChengeUseCase;
+    let confirmEmailChangeUseCase: ConfirmEmailChangeUseCase;
     let user: User;
 
     const input = {
@@ -57,7 +57,7 @@ describe("Confirm Email Change Use Case.", () => {
 
         user = recreateUser();
 
-        confirmEmailChangeUseCase = new ConfirmEmailChengeUseCase(userRepositoryMock, mailChangeCacheMock, tokenServiceMock);
+        confirmEmailChangeUseCase = new ConfirmEmailChangeUseCase(userRepositoryMock, mailChangeCacheMock, tokenServiceMock);
     });
 
     it("Should verify (token, code), search user in database and update new email.", async () => {

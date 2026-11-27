@@ -10,7 +10,7 @@ export interface confirmEmailChangeDTO {
 }
 
 @Injectable()
-export class ConfirmEmailChengeUseCase implements IConfirmEmailChangeUseCase {
+export class ConfirmEmailChangeUseCase implements IConfirmEmailChangeUseCase {
     constructor(
         @Inject(USER_REPOSITORY_TOKEN)
         private readonly userRepository: IUserRepository,

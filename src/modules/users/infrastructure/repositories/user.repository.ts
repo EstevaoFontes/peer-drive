@@ -2,7 +2,6 @@ import type { IUserRepository } from "../../domain/repositories/user.repository.
 import { UserMapper } from "../mappers/User.mapper.js";
 import { UserModel } from "../model/User.model.js";
 import { DriverLicenseModel } from "../model/DriverLicense.model.js";
-import "../model/assossiations.js";
 import type { User } from "../../domain/entities/user.entity.js";
 import { Injectable } from "@nestjs/common";
 import { InjectConnection, InjectModel } from "@nestjs/sequelize";
@@ -90,9 +89,11 @@ export class UserRepository implements IUserRepository {
         return UserMapper.toDomain(user);
     }
 
+
     async update(user: User): Promise<void> {
 
         await this.sequelize.transaction(async (transaction) => {
+
             await this.userModel.update({
                 email: user.email.value,
                 cpf: user.cpf.value,
@@ -108,34 +109,40 @@ export class UserRepository implements IUserRepository {
                 transaction
             });
 
+            // CNH não carregada ou não cadastrada.
             if (user.driverLicense === undefined || user.driverLicense === null) {
                 return;
             }
 
-            await this.driverLicenseModel.findOrCreate({
-                where: {
-                    userId: user.id.value
-                },
-                defaults: {
-                    userId: user.id.value,
+            const [driverLicense, created] =
+                await this.driverLicenseModel.findOrCreate({
+                    where: {
+                        userId: user.id.value
+                    },
+                    defaults: {
+                        userId: user.id.value,
+                        registration: user.driverLicense.registration,
+                        category: user.driverLicense.category,
+                        firstLicenseDate: user.driverLicense.firstLicenseDate,
+                        expirationDate: user.driverLicense.expirationDate
+                    },
+                    transaction
+                });
+
+            // Atualiza a CNH caso ela já exista.
+            if (!created) {
+                await driverLicense.update({
                     registration: user.driverLicense.registration,
                     category: user.driverLicense.category,
                     firstLicenseDate: user.driverLicense.firstLicenseDate,
                     expirationDate: user.driverLicense.expirationDate
-                },
-                transaction
-            }).then(async ([driverLicense, created]) => {
-                if (!created) {
-                    await driverLicense.update({
-                        registration: user.driverLicense!.registration,
-                        category: user.driverLicense!.category,
-                        firstLicenseDate: user.driverLicense!.firstLicenseDate,
-                        expirationDate: user.driverLicense!.expirationDate
-                    }, { transaction });
-                }
-            });
+                }, {
+                    transaction
+                });
+            }
         });
     }
+
 
     async delete(id: string): Promise<boolean> {
 

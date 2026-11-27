@@ -3,7 +3,7 @@ import { User } from "../../domain/entities/user.entity.js";
 import { IUserRepository } from "../../domain/repositories/user.repository.js";
 import { IHashService } from "../../../core/services/password-hash-service.interface.js";
 import { ITokenService } from "../../../core/services/token-service.interface.js";
-import { LoginUserUserCase } from "./login.use-case.js";
+import { LoginUserUseCase } from "./login.use-case.js";
 
 describe("Test Login User Use Case", () => {
 
@@ -15,7 +15,7 @@ describe("Test Login User Use Case", () => {
     let userRepositoryMock: IUserRepositoryMock;
     let hashServiceMock: IHashServiceMock;
     let tokenServiceMock: ITokenServiceMock;
-    let loginUserUseCase: LoginUserUserCase;
+    let loginUserUseCase: LoginUserUseCase;
     let user: User;
 
     const recreateUser = () => User.restore({
@@ -61,7 +61,7 @@ describe("Test Login User Use Case", () => {
 
         user = recreateUser();
 
-        loginUserUseCase = new LoginUserUserCase(userRepositoryMock, hashServiceMock, tokenServiceMock);
+        loginUserUseCase = new LoginUserUseCase(userRepositoryMock, hashServiceMock, tokenServiceMock);
 
     });
 
