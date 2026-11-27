@@ -2,15 +2,16 @@ import { type IHashService, HASH_SERVICE_TOKEN } from "../../../core/services/pa
 import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
 import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../../core/services/token-service.interface.js";
 import { Injectable, Inject, BadRequestException, UnauthorizedException, NotFoundException } from "@nestjs/common";
+import { IChangePasswordUseCase } from "../../presentation/interfaces/change-password-use-case.interface.js";
 
-interface IChangePasswordDTO {
+export interface IChangePasswordDTO {
     actualPassword: string
     newPassword: string
     confirmNewPassword: string
 }
 
 @Injectable()
-export class ChangePasswordUseCase {
+export class ChangePasswordUseCase implements IChangePasswordUseCase {
     constructor(
         @Inject(USER_REPOSITORY_TOKEN)
         private readonly userRepository: IUserRepository,

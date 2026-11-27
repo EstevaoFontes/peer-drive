@@ -1,8 +1,9 @@
 import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../../core/services/token-service.interface.js";
 import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
 import { Injectable, Inject, UnauthorizedException, NotFoundException } from "@nestjs/common";
+import { IGetUserUseCase } from "../../presentation/interfaces/get-user-use-case.interface.js";
 
-interface GetUserDataDTO {
+export interface GetUserOutPutDTO {
     readonly email: string
     readonly name: string
     readonly cpf: string
@@ -12,7 +13,8 @@ interface GetUserDataDTO {
 }
 
 @Injectable()
-export class GetUserDataUseCase {
+export class GetUserDataUseCase implements IGetUserUseCase {
+    
     constructor(
         @Inject(TOKEN_SERVICE_TOKEN)
         private readonly tokenService: ITokenService,
@@ -21,7 +23,7 @@ export class GetUserDataUseCase {
         private readonly userRepository: IUserRepository
     ) { }
 
-    async execute(token: string): Promise<GetUserDataDTO> {
+    async execute(token: string): Promise<GetUserOutPutDTO> {
 
         const payload = await this.tokenService.verify(token);
 

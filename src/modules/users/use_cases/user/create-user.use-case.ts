@@ -2,10 +2,11 @@ import { Injectable, Inject, BadRequestException } from "@nestjs/common";
 import { USER_REPOSITORY_TOKEN, type IUserRepository } from "../../domain/repositories/user.repository.js";
 import { type IHashService, HASH_SERVICE_TOKEN } from "../../../core/services/password-hash-service.interface.js";
 import { User } from "../../domain/entities/user.entity.js";
+import { ICreateUserUseCase } from "../../presentation/interfaces/create-user.interface.js";
 
 
 
-interface CreateUserDTO {
+export interface CreateUserDTO {
     name: string
     email: string
     cpf: string
@@ -17,7 +18,7 @@ interface CreateUserDTO {
 }
 
 @Injectable()
-export class CreateUserUseCase {
+export class CreateUserUseCase implements ICreateUserUseCase {
     constructor(
         @Inject(USER_REPOSITORY_TOKEN)
         private readonly userRepository: IUserRepository,

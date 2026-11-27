@@ -8,4 +8,4 @@ export interface IMailChangeCacheService {
     consumeCode(userId: string, code: string): Promise<{newEmail : string} | null>
 }
 
-export const MAIL_CHANGE_CACHE_TOKEN = "IMailChangeStore";
+export const MAIL_CHANGE_CACHE_TOKEN = Symbol("IMailChangeCacheService");
