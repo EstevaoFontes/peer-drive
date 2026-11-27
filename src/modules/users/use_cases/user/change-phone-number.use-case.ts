@@ -1,13 +1,14 @@
 import { Inject, Injectable, UnauthorizedException, NotFoundException } from "@nestjs/common";
 import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
 import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../../core/services/token-service.interface.js";
+import { IChangePhoneNumberUseCase } from "../../presentation/interfaces/change-phone-number.interface.js";
 
-interface ChangePhoneNumberDTO {
+export interface ChangePhoneNumberDTO {
     newPhoneNumber: string
 }
 
 @Injectable()
-export class ChangePhoneNumberUseCase {
+export class ChangePhoneNumberUseCase implements IChangePhoneNumberUseCase {
     constructor(
         @Inject(USER_REPOSITORY_TOKEN)
         private readonly userRepository: IUserRepository,

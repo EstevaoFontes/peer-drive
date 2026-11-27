@@ -6,5 +6,5 @@ export const Transporter = nodemailer.createTransport({
     secure: false,
 });
 
-export const EMAIL_SERVICE_TOKEN = "EMAIL_SERVICE";
-export const MAIL_TRANSPORTER_TOKEN = "MAIL_TRANSPORTER";
+export const EMAIL_SERVICE_TOKEN = Symbol("EMAIL_SERVICE");
+export const MAIL_TRANSPORTER_TOKEN = Symbol("MAIL_TRANSPORTER");

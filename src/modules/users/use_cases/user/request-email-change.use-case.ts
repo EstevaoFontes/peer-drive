@@ -5,14 +5,15 @@ import { type ICodeGeneratorService, CODE_GENERATOR_SERVICE_TOKEN } from "../../
 import { type IMailChangeCacheService, MAIL_CHANGE_CACHE_TOKEN } from "../../../core/services/mail-change-cache-service.interface.js";
 import { Inject, Injectable, BadRequestException, UnauthorizedException, ConflictException } from "@nestjs/common";
 import { changeEmailTemplate } from "../../../core/infrastructure/email/change-email-template.js";
+import { IRequestChangeEmailUseCase } from "../../presentation/interfaces/request-change-email.interface.js";
 
 
-interface IUpdateEmailDTO {
+export interface IUpdateEmailDTO {
     newEmail: string
 }
 
 @Injectable()
-export class RequestEmailChangeUseCase {
+export class RequestEmailChangeUseCase implements IRequestChangeEmailUseCase {
 
     constructor(
         @Inject(TOKEN_SERVICE_TOKEN)

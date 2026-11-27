@@ -2,13 +2,15 @@ import { Inject, Injectable, UnauthorizedException, NotFoundException } from "@n
 import { type ITokenService, TOKEN_SERVICE_TOKEN } from "../../../core/services/token-service.interface.js";
 import { type IUserRepository, USER_REPOSITORY_TOKEN } from "../../domain/repositories/user.repository.js";
 import { type IMailChangeCacheService, MAIL_CHANGE_CACHE_TOKEN } from "../../../core/services/mail-change-cache-service.interface.js";
+import { IConfirmEmailChangeUseCase } from "../../presentation/interfaces/confirm-email.interface.js";
 
-interface confirmEmailChengeDTO {
+
+export interface confirmEmailChangeDTO {
     code: string
 }
 
 @Injectable()
-export class ConfirmEmailChengeUseCase {
+export class ConfirmEmailChengeUseCase implements IConfirmEmailChangeUseCase {
     constructor(
         @Inject(USER_REPOSITORY_TOKEN)
         private readonly userRepository: IUserRepository,
@@ -21,7 +23,7 @@ export class ConfirmEmailChengeUseCase {
 
     ) { };
 
-    async execute(token: string, input: confirmEmailChengeDTO): Promise<void> {
+    async execute(token: string, input: confirmEmailChangeDTO): Promise<void> {
 
         const payload = await this.tokenService.verify(token);
 
@@ -41,7 +43,7 @@ export class ConfirmEmailChengeUseCase {
             throw new NotFoundException("Houve um erro, por favor tente novamente mais tarde.");
         }
 
-        if(payload.userID !== user.id.value){
+        if (payload.userID !== user.id.value) {
             throw new UnauthorizedException("Houve erro, tente novamente mais tarde");
         }
 

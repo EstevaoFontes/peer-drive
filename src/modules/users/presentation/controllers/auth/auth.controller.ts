@@ -4,9 +4,9 @@ import { loginUserSchema } from "../../schemas/user/login-user.schemas.js";
 import { requestForgotPasswordSchema } from "../../schemas/user/request-forgot-password.schema.js";
 import { confirmForgotPasswordSchema } from "../../schemas/user/confirm-forgot-password.schema.js";
 // INTERFACES
-import { type ILoginUserUseCase, LOGIN_USER_INTERFACE } from "../../interfaces/login-user-use-case.interface.js";
-import { type IForgotPasswordUseCase, FORGOT_PASSWORD_USE_CASE } from "../../interfaces/request-forgot-password.interface.js";
-import { type IConfirmForgotPasswordUseCase, CONFIRM_FORGOT_PASSWORD_USE_CASE } from "../../interfaces/confirm-forgot-password.interface.js";
+import { type ILoginUserUseCase, LOGIN_USER_INTERFACE_TOKEN } from "../../interfaces/login-user-use-case.interface.js";
+import { type IForgotPasswordUseCase, FORGOT_PASSWORD_USE_CASE_TOKEN } from "../../interfaces/request-forgot-password.interface.js";
+import { type IConfirmForgotPasswordUseCase, CONFIRM_FORGOT_PASSWORD_USE_CASE_TOKEN } from "../../interfaces/confirm-forgot-password.interface.js";
 
 
 interface LoginOutPutDTO {
@@ -18,13 +18,13 @@ interface LoginOutPutDTO {
 export class AuthController {
 
     constructor(
-        @Inject(LOGIN_USER_INTERFACE)
+        @Inject(LOGIN_USER_INTERFACE_TOKEN)
         private readonly loginUserUseCase: ILoginUserUseCase,
 
-        @Inject(FORGOT_PASSWORD_USE_CASE)
+        @Inject(FORGOT_PASSWORD_USE_CASE_TOKEN)
         private readonly forgotPasswordUseCase: IForgotPasswordUseCase,
 
-        @Inject(CONFIRM_FORGOT_PASSWORD_USE_CASE)
+        @Inject(CONFIRM_FORGOT_PASSWORD_USE_CASE_TOKEN)
         private readonly confirmForgotPasswordUseCase: IConfirmForgotPasswordUseCase
     ) { }
 

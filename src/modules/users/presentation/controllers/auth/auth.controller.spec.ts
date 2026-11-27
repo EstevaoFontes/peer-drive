@@ -46,7 +46,11 @@ describe("Test Controller Auth User.", () => {
             execute: vi.fn()
         };
 
-        controller = new AuthController(loginUserUseCaseMock, forgotPasswordUseCaseMock, confirmForgotPasswordUseCaseMock);
+        controller = new AuthController(
+            loginUserUseCaseMock,
+            forgotPasswordUseCaseMock,
+            confirmForgotPasswordUseCaseMock
+        );
     });
 
     describe("Test Login user.", () => {
